@@ -1,0 +1,5 @@
+{"type":"mouseMove","at":0.0,"ev":{"t":2,"pos":{"X":85,"Y":204}}}
+{"type":"mouseDown","at":0.0,"ev":{"t":0,"pos":{"X":85,"Y":204},"button":0,"clicks":1}}
+{"type":"mouseUp","at":0.0,"ev":{"t":1,"pos":{"X":85,"Y":204},"button":0,"clicks":1}}
+{"type":"mouseDown","at":0.0,"ev":{"t":0,"pos":{"X":86,"Y":205},"button":0,"clicks":2}}
+{"type":"mouseUp","at":0.0,"ev":{"t":1,"pos":{"X":86,"Y":205},"button":0,"clicks":2}}

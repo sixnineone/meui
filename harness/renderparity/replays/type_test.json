@@ -1,0 +1,6 @@
+{"type":"mouseMove","at":0.0,"ev":{"t":2,"pos":{"X":85,"Y":204}}}
+{"type":"mouseDown","at":0.05,"ev":{"t":0,"pos":{"X":85,"Y":204},"button":0,"clicks":1}}
+{"type":"mouseUp","at":0.10,"ev":{"t":1,"pos":{"X":85,"Y":204},"button":0,"clicks":1}}
+{"type":"runeTyped","at":0.2,"ev":{"t":7,"rune":97}}
+{"type":"runeTyped","at":0.3,"ev":{"t":7,"rune":98}}
+{"type":"runeTyped","at":0.4,"ev":{"t":7,"rune":99}}

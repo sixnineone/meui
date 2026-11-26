@@ -1,0 +1,294 @@
+{
+  "name": "Space Light",
+  "dark": false,
+  "editorScheme": "/colorSchemes/light/space_light.xml",
+  "colors": {
+    "alphaOverlayLight": "#ffffff08",
+    "alphaOverlay": "#00000016",
+    "alphaOverlayDark": "#00000032",
+
+    "Grey01": "#e6e8e9",
+    "Grey02": "#c1c5c8",
+    "Grey03": "#9ea3a7",
+    "Grey04": "#7c8286",
+    "Grey05": "#5c6166",
+    "Grey06": "#4d535b",
+    "Grey07": "#404750",
+    "Grey08": "#343a45",
+    "Grey09": "#282e3a",
+    "Grey10": "#1e2430",
+
+    "Beige01": "#fcfcfc",
+    "Beige02": "#fdf8f1",
+    "Beige03": "#fff8f2",
+    "Beige04": "#f8f5e9",
+    "Beige05": "#faf2e1",
+    "Beige06": "#fbeed5",
+    "Beige07": "#fce8cc",
+    "Beige08": "#fce4c3",
+    "Beige09": "#fde1ba",
+    "Beige10": "#fedeb2",
+
+    "Orange01": "#ffe0b2",
+    "Orange02": "#fdc88a",
+    "Orange03": "#fbac64",
+    "Orange04": "#fa8d3e",
+    "Orange05": "#f77c21",
+    "Orange06": "#f56d06",
+    "Orange07": "#e56205",
+    "Orange08": "#cb5707",
+    "Orange09": "#bb4b05",
+    "Orange10": "#ab4004",
+
+    "DeepOrange01": "#ffccbc",
+    "DeepOrange02": "#ffab91",
+    "DeepOrange03": "#ff8a65",
+    "DeepOrange04": "#f66639",
+    "DeepOrange05": "#f55615",
+    "DeepOrange06": "#ea4b0f",
+    "DeepOrange07": "#dc410b",
+    "DeepOrange08": "#d33d0c",
+    "DeepOrange09": "#953a1b",
+    "DeepOrange10": "#5d2f24",
+
+    "Rose01": "#f6a7ae",
+    "Rose02": "#ed7e8e",
+    "Rose03": "#e55971",
+    "Rose04": "#dd3558",
+    "Rose05": "#d51544",
+    "Rose06": "#be1538",
+    "Rose07": "#a7142e",
+    "Rose08": "#911325",
+    "Rose09": "#7a121d",
+    "Rose10": "#641015",
+
+    "Emerald01": "#c2f3e3",
+    "Emerald02": "#a0e5cf",
+    "Emerald03": "#81d9bc",
+    "Emerald04": "#65ccaa",
+    "Emerald05": "#42c99b",
+    "Emerald06": "#39b082",
+    "Emerald07": "#29a16d",
+    "Emerald08": "#1b9258",
+    "Emerald09": "#0e8345",
+    "Emerald10": "#047534",
+
+    "Green01": "#beffd0",
+    "Green02": "#8beb97",
+    "Green03": "#63d85f",
+    "Green04": "#53c538",
+    "Green05": "#4bb218",
+    "Green06": "#43a013",
+    "Green07": "#3b8e10",
+    "Green08": "#337c0c",
+    "Green09": "#2b6a09",
+    "Green10": "#245907",
+
+    "Blue01": "#e9f2fc",
+    "Blue02": "#d3e7fa",
+    "Blue03": "#93c5ee",
+    "Blue04": "#59a9e2",
+    "Blue05": "#2997d9",
+    "Blue06": "#1f89cc",
+    "Blue07": "#1e77b8",
+    "Blue08": "#1c67a4",
+    "Blue09": "#1a5790",
+    "Blue10": "#18497c",
+
+    "Violet01": "#ecc8ec",
+    "Violet02": "#e6b3ee",
+    "Violet03": "#db9ef0",
+    "Violet04": "#ca88f2",
+    "Violet05": "#b373f5",
+    "Violet06": "#a361de",
+    "Violet07": "#9452c8",
+    "Violet08": "#8543b2",
+    "Violet09": "#76369c",
+    "Violet10": "#672b86",
+
+    "Bronze01": "#ffd192",
+    "Bronze02": "#ffc77a",
+    "Bronze03": "#ffbd62",
+    "Bronze04": "#ffb34a",
+    "Bronze05": "#ffaa33",
+    "Bronze06": "#da912b",
+    "Bronze07": "#b57824",
+    "Bronze08": "#905f1c",
+    "Bronze09": "#6b4715",
+    "Bronze10": "#472f0e"
+  },
+  "icons": {
+  },
+  "ui": {
+    "*": {
+      "background": "Beige01",
+      "foreground": "Grey05",
+      "borderColor": "Beige01",
+      "separatorColor": "Beige01",
+      "selectionBackground": "Blue02",
+      "selectionForeground": "Grey05",
+      "acceleratorForeground": "Grey04",
+      "acceleratorSelectionForeground": "Grey04",
+      "disabledForeground": "Grey02",
+      "disabledText": "Grey02",
+      "hoverBackground": "Blue01",
+      "hoverBorderColor": "Blue01",
+      "arc": 4.0
+    },
+    "Borders": {
+      "color": "Beige01",
+      "ContrastBorderColor": "Grey01"
+    },
+    "Window": {
+      "border": "0,0,0,0,#fcfcfc",
+      "undecorated.border": "0,0,0,0,#fcfcfc"
+    },
+    "windowBorder": "0,0,0,0,#fcfcfc",
+    "Editor": {
+      "background": "Beige01",
+      "foreground": "Grey05"
+    },
+    "PopupMenu": {
+      "translucentBackground": "Beige02",
+      "background": "Beige02"
+    },
+    "Popup": {
+      "background": "Beige02",
+      "inactiveBorderColor": "Beige02",
+      "borderColor": "Beige02",
+      "Header": {
+        "activeBackground": "Beige02",
+        "inactiveBackground": "Beige02"
+      }
+    },
+    "Menu": {
+      "background": "Beige02",
+      "borderColor": "Beige02",
+      "separatorColor": "Beige02"
+    },
+    "MenuItem": {
+      "background": "Beige02"
+    },
+    "CompletionPopup": {
+      "matchForeground": "DeepOrange06",
+      "selectionInactiveBackground": "Blue01"
+    },
+    "Component": {
+      "errorFocusColor": "Rose05",
+      "borderColor": "Grey02",
+      "focusColor": "Bronze05",
+      "focusedBorderColor": "Beige02",
+      "focusWidth": 1.0
+    },
+    "CheckBox": {
+      "select": "Bronze05"
+    },
+    "ComboBox": {
+      "ArrowButton.iconColor": "Orange06",
+      "ArrowButton.disabledIconColor": "Beige10"
+    },
+    "Button": {
+      "foreground": "DeepOrange09",
+      "startBackground": "Beige01",
+      "endBackground": "Beige01",
+      "startBorderColor": "Bronze05",
+      "endBorderColor": "Bronze05",
+      "focusedBorderColor": "Bronze05",
+      "shadowWidth": 0,
+      "default": {
+        "foreground": "DeepOrange10",
+        "startBackground": "Bronze05",
+        "endBackground": "Bronze05",
+        "startBorderColor": "Bronze05",
+        "endBorderColor": "Bronze05",
+        "focusedBorderColor": "Bronze05",
+        "shadowColor": "Beige01"
+      }
+    },
+    "ActionButton": {
+      "pressedBackground": "Beige10",
+      "pressedBorderColor": "Beige10"
+    },
+    "EditorTabs": {
+      "background": "Beige01",
+      "underlinedTabBackground": "Beige01",
+      "underlineColor": "Bronze05",
+      "inactiveUnderlineColor": "Bronze01",
+      "hoverBackground": "Beige04",
+      "inactiveColoredFileBackground": "alphaOverlayLight"
+    },
+    "DefaultTabs": {
+      "background": "Beige01",
+      "underlinedTabBackground": "Beige01",
+      "underlineColor": "Bronze05",
+      "inactiveUnderlineColor": "Bronze01",
+      "hoverBackground": "Beige04"
+    },
+    "ToolWindow": {
+      "Header": {
+        "inactiveBackground": "Beige01",
+        "borderColor": "Grey01"
+      },
+      "Button": {
+        "selectedBackground": "Bronze01",
+        "selectedForeground": "Grey05"
+      }
+    },
+    "RunWidget": {
+      "iconColor": "Grey05",
+      "runningIconColor": "Rose03",
+      "runIconColor": "Emerald05",
+      "runningBackground": "Beige01",
+      "stopBackground": "Beige01",
+      "hoverBackground": "alphaOverlay",
+      "pressedBackground": "alphaOverlayDark"
+    },
+    "Notification": {
+      "background": "Beige04",
+      "borderColor": "Bronze01",
+      "errorBorderColor": "Rose02",
+      "Button": {
+        "background": "Bronze05",
+        "foreground": "DeepOrange10"
+      }
+    },
+    "Counter": {
+      "background": "Bronze05",
+      "foreground": "DeepOrange10"
+    },
+    "IconBadge": {
+      "infoBackground": "Bronze05",
+      "successBackground": "Green03",
+      "warningBackground": "Orange06",
+      "errorBackground": "Rose05"
+    },
+    "MemoryIndicator": {
+      "allocatedBackground": "Beige06",
+      "usedBackground": "Beige10"
+    },
+    "Plugins": {
+      "Button": {
+        "installForeground": "DeepOrange10",
+        "installFillForeground": "DeepOrange10",
+        "installBorderColor": "Bronze05",
+        "installFillBackground": "Bronze05",
+        "installFocusedBackground": "Beige10",
+        "updateBackground": "Beige10",
+        "updateBorderColor": "Beige10",
+        "updateForeground": "DeepOrange10"
+      }
+    },
+    "Debugger": {
+      "EvaluateExpression.background": "Beige02"
+    },
+    "FileColor": {
+      "Yellow": "#FFF8DA",
+      "Blue": "#E7F2FF",
+      "Gray": "#F2F1F1",
+      "Green": "#EAFFE2",
+      "Orange": "#FFEFE1",
+      "Rose": "#FFEFEF",
+      "Violet": "#F2ECFF"
+    }
+  }
+}

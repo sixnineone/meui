@@ -1,0 +1,10 @@
+harness/renderparity/out/
+harness/renderparity/diff/
+harness/renderparity/out-offscreen/
+harness/renderparity/1/
+harness/behaviour/out/
+preset-gallery/
+*.test
+*.exe
+go.work
+go.work.sum

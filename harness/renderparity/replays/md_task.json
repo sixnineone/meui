@@ -1,0 +1,4 @@
+{"type":"mouseMove","at":0.0,"ev":{"t":2,"pos":{"X":36,"Y":271}}}
+{"type":"mouseDown","at":0.0,"ev":{"t":0,"pos":{"X":36,"Y":271},"button":0,"clicks":1}}
+{"type":"mouseUp","at":0.0,"ev":{"t":1,"pos":{"X":36,"Y":271},"button":0,"clicks":1}}
+{"type":"mouseMove","at":0.0,"ev":{"t":2,"pos":{"X":36,"Y":250}}}

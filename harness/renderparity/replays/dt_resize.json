@@ -1,0 +1,5 @@
+{"type":"mouseMove","at":0.0,"ev":{"t": 2, "pos": {"X": 288, "Y": 65}}}
+{"type":"mouseDown","at":0.0,"ev":{"t": 0, "pos": {"X": 288, "Y": 65}, "button": 0, "clicks": 1}}
+{"type":"mouseDrag","at":0.0,"ev":{"t": 3, "pos": {"X": 330, "Y": 65}}}
+{"type":"mouseDrag","at":0.0,"ev":{"t": 3, "pos": {"X": 360, "Y": 65}}}
+{"type":"mouseUp","at":0.0,"ev":{"t": 1, "pos": {"X": 360, "Y": 65}, "button": 0, "clicks": 1}}

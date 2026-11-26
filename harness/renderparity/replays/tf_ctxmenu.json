@@ -1,0 +1,6 @@
+{"type":"mouseMove","at":0.0,"ev":{"t":2,"pos":{"X":410,"Y":204}}}
+{"type":"mouseDown","at":0.0,"ev":{"t":0,"pos":{"X":410,"Y":204},"button":1,"clicks":1}}
+{"type":"mouseUp","at":0.0,"ev":{"t":1,"pos":{"X":410,"Y":204},"button":1,"clicks":1}}
+{"type":"mouseMove","at":0.0,"ev":{"t":2,"pos":{"X":450,"Y":300}}}
+{"type":"mouseDown","at":0.0,"ev":{"t":0,"pos":{"X":450,"Y":300},"button":0,"clicks":1}}
+{"type":"mouseUp","at":0.0,"ev":{"t":1,"pos":{"X":450,"Y":300},"button":0,"clicks":1}}
