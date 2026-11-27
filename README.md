@@ -54,6 +54,46 @@ CGO_ENABLED=0 go run ./examples/docs                 # a real window, real input
 CGO_ENABLED=0 go run ./examples/docs -shot docs.png  # the same scene, headless
 ```
 
+## Requirements
+
+Go **1.25** is the only build-time requirement — the desktop build is cgo-free, so there
+is no compiler or `-dev` package to install.
+
+**To open a window** (anything without `-shot`) the machine needs Linux with:
+
+- **SDL3** runtime (`libSDL3.so.0`) — windows, input, clipboard, dialogs and the tray
+- **OpenGL 2.1+** (Mesa or the vendor driver) — the `mobilegles` renderer
+- an **X11 display**; on Wayland the toolkit requests X11, and `SDL_VIDEODRIVER=wayland`
+  asks for the native backend instead
+
+```sh
+# openSUSE Tumbleweed
+sudo zypper install libSDL3-0
+
+# Debian / Ubuntu 25.04+
+sudo apt install libsdl3-0
+
+# Fedora 41+
+sudo dnf install SDL3
+
+# Arch
+sudo pacman -S sdl3
+```
+
+Releases that do not package SDL3 yet (for example Ubuntu 24.04) need SDL3 3.x built from
+source and installed. Verify the runtime with:
+
+```sh
+ldconfig -p | grep libSDL3
+```
+
+**Headless** rendering (`-shot`, `qmlshot`, the test suites) needs none of that: no SDL3,
+no display, no GPU — it draws with the software device.
+
+**Optional, for development:** `python3` + `numpy` + `Pillow` for the render-parity
+reference script, and `xvfb` to run the GL tests without a desktop session. A C toolchain
+is only needed for the Android host, which lives in a separate repository.
+
 ## A scene, a page of Go
 
 Save this as `hello.qml`. Note what is *not* there: no `onClicked`, no bindings, no
@@ -218,6 +258,25 @@ func main() {
     <td width="50%"><img src="docs/screens/admin.png" alt="Admin console"><br><sub><b>admin</b> — dark rail, filters, invite dialog</sub></td>
   </tr>
 </table>
+
+## Kitchen sink
+
+The imported QML demo is the stress test for the layout and paint paths: 18 tabs of
+widgets, all wired from Go. A few of them:
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screens/enterprise-basic.png" alt="Basic Components tab"><br><sub><b>Basic Components</b> — the first tab: labels, buttons, check boxes, combos, fields, scroll panes and typography</sub></td>
+    <td width="50%"><img src="docs/screens/enterprise-calendar.png" alt="Calendar and Color tab"><br><sub><b>Calendar &amp; Color</b> — date and time pickers, colour fields, a calendar and a colour picker</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/screens/enterprise-datatable.png" alt="Data Table tab"><br><sub><b>Data Table</b> — a typed table with virtual scrolling, selection and sorting</sub></td>
+    <td width="50%"><img src="docs/screens/enterprise-code.png" alt="Code Editor tab"><br><sub><b>Code Editor</b> — syntax highlighting, line numbers and folding on this repository's own source</sub></td>
+  </tr>
+</table>
+
+`CGO_ENABLED=0 go run ./examples/enterprise` opens it; `MEUI_TAB=<n>` starts on a tab and
+`MEUI_CAPTURE_SHOT=<path>` captures the live window.
 
 ## Examples
 
