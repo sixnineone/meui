@@ -14,8 +14,8 @@ All notable changes to MeUI are recorded here. The format follows
 - Install section (`go get`), API-docs link, release and CI badges.
 - Requirements section: SDL3, OpenGL, X11 and the per-distro install commands; headless
   rendering needs none of them.
-- README gallery: landing, launcher, the device demo, the direct/flow pages, and four
-  kitchen-sink tabs.
+- README gallery: landing, launcher, the device demo, the direct/flow pages, a dark
+  dashboard and six kitchen-sink tabs.
 - `CONTRIBUTING.md`, `SECURITY.md`, issue and PR templates.
 
 ### Changed

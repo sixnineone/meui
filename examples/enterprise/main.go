@@ -28,7 +28,7 @@ import (
 	"github.com/sixnineone/meui/widgets"
 )
 
-const AppVersion = "v0.24.3 — May 16, 2026"
+const AppVersion = "v0.1.1"
 
 // buildID is stamped at compile time (-ldflags -X) so the running
 // window's title bar proves exactly which build is on screen.

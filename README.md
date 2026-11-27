@@ -371,10 +371,25 @@ widgets, all wired from Go. A few of them:
     <td width="50%"><img src="docs/screens/enterprise-datatable.png" alt="Data Table tab"><br><sub><b>Data Table</b> — a typed table with virtual scrolling, selection and sorting</sub></td>
     <td width="50%"><img src="docs/screens/enterprise-code.png" alt="Code Editor tab"><br><sub><b>Code Editor</b> — syntax highlighting, line numbers and folding on this repository's own source</sub></td>
   </tr>
+  <tr>
+    <td width="50%"><img src="docs/screens/enterprise-mdi.png" alt="MDI Windows tab"><br><sub><b>MDI Windows</b> — draggable, closable child windows inside the page</sub></td>
+    <td width="50%"><img src="docs/screens/enterprise-markdown.png" alt="Markdown tab"><br><sub><b>Markdown</b> — a source editor and a live preview, split</sub></td>
+  </tr>
 </table>
 
 `CGO_ENABLED=0 go run ./examples/enterprise` opens it; `MEUI_TAB=<n>` starts on a tab and
 `MEUI_CAPTURE_SHOT=<path>` captures the live window.
+
+## Themes
+
+A preset restyles structure and ink together, not just the palette. The same dashboard with
+`-preset web-dark`:
+
+<img src="docs/screens/dashboard-dark.png" alt="The dashboard on the web-dark preset" width="100%">
+
+19 presets ship — `web-light`/`web-dark` for pages, `meui-light`/`windows11-dark` for
+consoles, plus macOS, Windows 11, Adwaita, Breeze, metro, iOS, Android and the harness
+pair. `cmd/tools/presetgallery` renders the whole set on one sheet.
 
 ## Examples
 
