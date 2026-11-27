@@ -260,6 +260,11 @@ func main() {
 		DataTable     *widgets.DataTable `qml:"dataTable"`
 		TabDemo       *widgets.TabPanel  `qml:"tabDemoContainer"`
 
+		// The code editor's own tabs read real files from this tree, resolved
+		// against the QML's directory so `go run .` and `go run ./examples/enterprise`
+		// both work.
+		MdCodeReadme *widgets.MarkdownView `qml:"mdCodeReadme"`
+
 		// Markdown editor demo tab (two-pane source + preview).
 		MdEditor   *widgets.MarkdownEditor `qml:"mdEditor"`
 		MdSplit    *widgets.Button         `qml:"mdModeSplit"`
@@ -303,6 +308,25 @@ func main() {
 	}
 	if err := registry.Inject(&model); err != nil {
 		log.Printf("Inject warning: %v (some demo features disabled)", err)
+	}
+
+	// The code-editor tabs read files from THIS tree. The paths are resolved against
+	// the QML file, never absolute: the demo has to work from a checkout anywhere.
+	demoDir := filepath.Dir(qmlPath)
+	for _, ed := range []struct {
+		w    *widgets.CodeEditor
+		rels []string
+	}{
+		{model.CeMain, []string{"main.go"}},
+		{model.CeTest, []string{"main.qml"}},
+		{model.CeWidget, []string{"..", "..", "widgets", "codeeditor.go"}},
+	} {
+		if ed.w != nil {
+			ed.w.SetFilePath(filepath.Join(append([]string{demoDir}, ed.rels...)...))
+		}
+	}
+	if model.MdCodeReadme != nil {
+		model.MdCodeReadme.SetFilePath(filepath.Join(demoDir, "..", "..", "README.md"))
 	}
 
 	win, ok := widget.(*meui.Window)

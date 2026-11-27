@@ -1593,11 +1593,10 @@ Window {
                 Layout.fillHeight: true
                 showLineNumbers: true
                 fontSize: 50
-                filePath: "/media/siya/TradeData/Data/env/dev/golang/src/flipmode.com/meui/examples/demo/main.go"
               }
             }
             Tab {
-              title: "test.qml"
+              title: "main.qml"
               icon: "grid"
               CodeEditor {
                 id: ceTest
@@ -1605,11 +1604,10 @@ Window {
                 Layout.fillHeight: true
                 showLineNumbers: true
                 fontSize: 20
-                filePath: "codeeditor.go"
               }
             }
             Tab {
-              title: "widget.go"
+              title: "codeeditor.go"
               icon: "hash"
               CodeEditor {
                 id: ceWidget
@@ -1617,16 +1615,15 @@ Window {
                 Layout.fillHeight: true
                 showLineNumbers: true
                 fontSize: 20
-                filePath: "/media/siya/TradeData/Data/env/dev/golang/src/flipmode.com/meui/widget.go"
               }
             }
             Tab {
               title: "README.md"
               icon: "document"
               MarkdownView {
+                id: mdCodeReadme
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                filePath: "/media/siya/TradeData/Data/env/dev/golang/src/flipmode.com/meui/docs/HITTEST.md"
               }
             }
           }
