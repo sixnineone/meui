@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Desktop: cgo-free](https://img.shields.io/badge/desktop-cgo--free-2ea44f)](#quick-start)
 
-<img src="docs/screens/landing.png" alt="A web-looking landing page built with MeUI" width="100%">
+<img src="docs/screens/dashboard.png" alt="A weather dashboard built with MeUI" width="100%">
 
 MeUI is a Go widget toolkit for **web-looking pages** and **desktop consoles**. Scenes are
 written in QML as a *builder*, not a language: no expressions, no bindings, no JavaScript.
@@ -261,7 +261,7 @@ func main() {
 
 ## Kitchen sink
 
-The imported QML demo is the stress test for the layout and paint paths: 18 tabs of
+The QML enterprise look demo is the stress test for the layout and paint paths: 18 tabs of
 widgets, all wired from Go. A few of them:
 
 <table>
