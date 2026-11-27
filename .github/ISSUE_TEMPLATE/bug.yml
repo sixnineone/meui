@@ -1,0 +1,34 @@
+name: Bug report
+description: Something renders or behaves wrong.
+body:
+  - type: markdown
+    attributes:
+      value: For security-sensitive issues use the private advisory link in SECURITY.md.
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Tag or commit, and the meui-gl/mobilegles versions if relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happens
+      description: The smallest reproduction — QML or Go — and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: Go version, distro, SDL3 version, GPU/GL driver, display server.
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: Screenshots or logs
+      description: A `-shot` PNG, a `MEUI_*` trace, or the relevant part of the log.
+    validations:
+      required: false

@@ -3,7 +3,10 @@
 **QML declares the surface. Go decides what it does.**
 
 [![Go 1.25](https://img.shields.io/badge/Go-1.25-00ADD8?logo=go&logoColor=white)](https://go.dev)
+[![CI](https://github.com/sixnineone/meui/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/sixnineone/meui/actions/workflows/ci.yml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/sixnineone/meui.svg)](https://pkg.go.dev/github.com/sixnineone/meui)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Release](https://img.shields.io/github/v/tag/sixnineone/meui?label=release)](https://github.com/sixnineone/meui/tags)
 [![Desktop: cgo-free](https://img.shields.io/badge/desktop-cgo--free-2ea44f)](#quick-start)
 
 <img src="docs/screens/dashboard.png" alt="A weather dashboard built with MeUI" width="100%">
@@ -32,8 +35,9 @@ screenshots and the pixel tests in this repository possible.
 - **Deterministic screenshots.** Every example runs headless with `-shot out.png`; the
   behaviour harness asserts layout, hit-testing and painting without a display, and the
   visual harness asserts real pixels in a real window.
-- **A toolkit you can theme.** 8 presets (`web-light`, `web-dark`, iOS, Android, harness)
-  plus 52 importable IntelliJ-style theme files, with per-widget overrides.
+- **A toolkit you can theme.** 19 presets (web, macOS, Windows 11, Adwaita, Breeze,
+  metro, iOS, Android, harness) plus 52 importable IntelliJ-style theme files, with
+  per-widget overrides.
 - **No cgo in the desktop build.** Control reaches SDL3 and OpenGL through purego, so the
   dev loop is plain `CGO_ENABLED=0 go run`.
 
@@ -54,6 +58,18 @@ frame without a display:
 CGO_ENABLED=0 go run ./examples/docs                 # a real window, real input
 CGO_ENABLED=0 go run ./examples/docs -shot docs.png  # the same scene, headless
 ```
+
+## Install
+
+```sh
+go get github.com/sixnineone/meui@latest
+go get github.com/sixnineone/meui-gl@latest   # the SDL3 window and input
+```
+
+API documentation follows the module: [pkg.go.dev/github.com/sixnineone/meui](https://pkg.go.dev/github.com/sixnineone/meui).
+The smallest complete applications are [`examples/direct`](examples/direct) (no QML) and
+[`examples/flow`](examples/flow) (declarative Go); [`examples/landing`](examples/landing) is
+the QML one.
 
 ## Requirements
 
@@ -332,6 +348,13 @@ func main() {
     <td width="50%"><img src="docs/screens/ops.png" alt="Ops console"><br><sub><b>ops</b> — menubar, tree, typed table, inspector, status bar</sub></td>
     <td width="50%"><img src="docs/screens/admin.png" alt="Admin console"><br><sub><b>admin</b> — dark rail, filters, invite dialog</sub></td>
   </tr>
+  <tr>
+    <td width="50%"><img src="docs/screens/direct.png" alt="Direct Go example"><br><sub><b>direct</b> — the same page built with widgets and setters</sub></td>
+    <td width="50%"><img src="docs/screens/flow.png" alt="Flow example"><br><sub><b>flow</b> — the same page declared as Go structs</sub></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><img src="docs/screens/device.png" alt="Phone-shaped device demo" width="320"><br><sub><b>device</b> — the phone-shaped demo: adaptive pages, sheets, a search view</sub></td>
+  </tr>
 </table>
 
 ## Kitchen sink
@@ -365,6 +388,8 @@ widgets, all wired from Go. A few of them:
 | [`checkout`](examples/checkout) | a three-step flow with inline validation and error rings |
 | [`ops`](examples/ops) | a desktop console: menubar, tree, typed table, inspector, status bar |
 | [`admin`](examples/admin) | a dark console: navigation rail, filters, invite dialog |
+| [`direct`](examples/direct) | the same page built with widgets and setters — no QML |
+| [`flow`](examples/flow) | the same page declared as Go structs, built by `flow` |
 | [`device`](examples/device), [`mobile`](examples/mobile) | phone-shaped pages at device sizes |
 | [`enterprise`](examples/enterprise) | the imported QML kitchen sink |
 | [`parity`](examples/parity) | the scene the soft and GL devices are diffed on |
@@ -392,7 +417,8 @@ CGO_ENABLED=0 go test -tags visual ./harness/behaviour/...   # real window, real
 make parity-web                                               # soft vs GL on the parity scene
 ```
 
-`cmd/tools` holds the instruments: `qmlshot` (headless render), `glshot` (GL render),
+CI runs `go build`, `go vet`, `gofmt`, the cgo guard and the headless suites on every push
+(see `.github/workflows/ci.yml`). `cmd/tools` holds the instruments: `qmlshot` (headless render), `glshot` (GL render),
 `imgdiff` (frame diff), `presetgallery` (every preset in one sheet), `qmlfmt`/`qmlverify`
 (scene hygiene), `themetool`, `fontprobe` and the determinism checks.
 
@@ -404,7 +430,7 @@ make parity-web                                               # soft vs GL on th
 
 ## Status
 
-**v0.1.0** — pre-1.0, so the API can still move. Linux desktop is the development target;
+**v0.1.1** — pre-1.0, so the API can still move. Linux desktop is the development target;
 the SDL3 adapter and the GL renderer are portable, and the adapter carries the Android JNI
 surface. Issues and examples of what you are building are welcome.
 

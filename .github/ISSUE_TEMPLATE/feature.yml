@@ -1,0 +1,24 @@
+name: Feature or widget request
+description: Something the toolkit should do or show.
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: What are you building
+      description: The application and the gap the toolkit leaves. Real scenes are the best proposals.
+    validations:
+      required: true
+  - type: textarea
+    id: shape
+    attributes:
+      label: Suggested shape
+      description: QML surface, Go setters, a flow wrapper, or how the soft and GL devices would draw it.
+    validations:
+      required: false
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What you tried
+      description: Widgets or workarounds you used instead, and where they fell short.
+    validations:
+      required: false

@@ -8,3 +8,7 @@ preset-gallery/
 *.exe
 go.work
 go.work.sum
+/enterprise
+/direct
+/launcher
+/readmecheck
