@@ -8,10 +8,11 @@
 
 <img src="docs/screens/dashboard.png" alt="A weather dashboard built with MeUI" width="100%">
 
-MeUI is a Go widget toolkit for **web-looking pages** and **desktop consoles**. Scenes are
-written in QML as a *builder*, not a language: no expressions, no bindings, no JavaScript.
-Every behaviour — a click, a selection, a scroll, a validation — is attached from Go, by
-id, so the logic is typed, testable and debuggable while the layout stays declarative.
+MeUI is a Go widget toolkit for **web-looking pages** and **desktop consoles**. A window can
+be built directly in Go, declared in Go structs with the `flow` wrappers, or written in QML —
+a *builder*, not a language: no expressions, no bindings, no JavaScript. However the layout
+is declared, every behaviour — a click, a selection, a scroll, a validation — is attached
+from Go, so the logic is typed, testable and debuggable.
 
 The same scene renders through a software device (headless, deterministic) or OpenGL
 (through [mobilegles](https://github.com/sixnineone/mobilegles)), which is what makes the
@@ -93,6 +94,76 @@ no display, no GPU — it draws with the software device.
 **Optional, for development:** `python3` + `numpy` + `Pillow` for the render-parity
 reference script, and `xvfb` to run the GL tests without a desktop session. A C toolchain
 is only needed for the Android host, which lives in a separate repository.
+
+## Three ways to build a window
+
+The same window can be built three ways. Behaviour is Go in every case; only the place the
+layout lives changes. Imports are omitted below.
+
+**Direct Go.** Construct widgets and set their properties:
+
+```go
+win := meui.NewWindow()
+
+content := meui.NewPanel()
+content.SetLayout(layout.NewVStack())
+win.AddChild(content)
+
+title := widgets.NewLabel()
+title.SetText("Hello, MeUI")
+title.SetFontSize(28)
+content.AddChild(title)
+
+content.AddChild(widgets.NewButton().SetText("Press me"))
+```
+
+**Declarative Go — `flow`.** Keep the layout declarative without a `.qml` file: describe the
+tree as Go structs and call `Build`. The compiler checks it, the fields mirror QML, and the
+result is the same widget tree the parser produces.
+
+> `flow` ships wrappers for `Window`, `Panel`, `VStack`, `HStack`, `Label`, `Button` and
+> `CheckBox`. A widget without a wrapper plugs in by implementing `flow.WidgetWrapper`.
+
+```go
+app := &flow.Window{
+	W:     flow.W{Width: 720, Height: 480},
+	Title: "Hello",
+	Children: []flow.WidgetWrapper{
+		&flow.VStack{
+			W:       flow.W{ID: "body", FillWidth: true, FillHeight: true},
+			Spacing: 12,
+			Children: []flow.WidgetWrapper{
+				&flow.Label{
+					Text:      "Hello, MeUI",
+					OnCreated: func(l *widgets.Label) { l.SetFontSize(28) },
+				},
+				&flow.Button{
+					Text:    "Press me",
+					OnClick: func() { fmt.Println("pressed") },
+				},
+			},
+		},
+	},
+}
+
+root, ids := flow.Build(app) // ids.Get("body") returns the built VStack
+```
+
+**QML.** Layout in a file, behaviour wired by id from Go — the model the examples use:
+
+```go
+scene, _ := web.Load("hello.qml", "web-light", 720, 480)
+scene.OnClick("card", func() { scene.SetText("title", "Pressed.") })
+```
+
+All three produce a `meui.Widget` tree, so the headless renderer does not care which one
+built it: `web.Shot(root, 720, 480, "out.png")`.
+
+| | layout lives in | checked at | best for |
+|---|---|---|---|
+| Direct Go | Go calls | compile time | tools, tests, dynamic trees |
+| `flow` | Go structs | compile time | declarative Go apps without QML |
+| QML | `.qml` file | parse time (`qmlverify`) | designer-readable pages, imported scenes |
 
 ## A scene, a page of Go
 
@@ -242,16 +313,20 @@ func main() {
 
 <table>
   <tr>
+    <td width="50%"><img src="docs/screens/landing.png" alt="Landing page"><br><sub><b>landing</b> — display type, offset card shadows, pill CTAs</sub></td>
     <td width="50%"><img src="docs/screens/dashboard.png" alt="Dashboard"><br><sub><b>dashboard</b> — gradients, translucent cards, a box chart</sub></td>
+  </tr>
+  <tr>
     <td width="50%"><img src="docs/screens/docs.png" alt="Docs"><br><sub><b>docs</b> — fixed top bar and sidebar, a 1,880px article, a sticky header</sub></td>
-  </tr>
-  <tr>
     <td width="50%"><img src="docs/screens/docs-scrolled.png" alt="Docs, scrolled"><br><sub><b>docs</b> — the sticky header after scrolling</sub></td>
-    <td width="50%"><img src="docs/screens/mail.png" alt="Mail"><br><sub><b>mail</b> — a virtual list of 240 messages, frosted header</sub></td>
   </tr>
   <tr>
+    <td width="50%"><img src="docs/screens/mail.png" alt="Mail"><br><sub><b>mail</b> — a virtual list of 240 messages, frosted header</sub></td>
     <td width="50%"><img src="docs/screens/checkout.png" alt="Checkout"><br><sub><b>checkout</b> — a three-step flow with inline validation</sub></td>
+  </tr>
+  <tr>
     <td width="50%"><img src="docs/screens/settings.png" alt="Settings"><br><sub><b>settings</b> — web-styled fields, switches, a toast</sub></td>
+    <td width="50%"><img src="docs/screens/launcher.png" alt="Examples launcher"><br><sub><b>launcher</b> — every example in one window</sub></td>
   </tr>
   <tr>
     <td width="50%"><img src="docs/screens/ops.png" alt="Ops console"><br><sub><b>ops</b> — menubar, tree, typed table, inspector, status bar</sub></td>
