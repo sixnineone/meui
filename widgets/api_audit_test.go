@@ -41,7 +41,7 @@ func TestButtonShortcut(t *testing.T) {
 	clicked := false
 	b.SetOnClicked(func() { clicked = true })
 	b.SetShortcut('S')
-	// unison keycodes for letters are ASCII uppercase; 'A'+18 == 'S'
+	// The reference keycodes for letters are ASCII uppercase; 'A'+18 == 'S'
 	keyCode := platform.KeyCode('A' + 18)
 	b.OnKeyDown(keyCode, 0)
 	if !clicked {

@@ -1,4 +1,4 @@
-// Package weight mirrors pryone.com/extern/unison/enums/weight.
+// Package weight mirrors the reference toolkit's weight enum.
 // mobilegles has no font weight enum; values are local.
 package weight
 

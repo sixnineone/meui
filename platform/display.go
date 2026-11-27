@@ -36,7 +36,7 @@ func NewDisplay(id int, name string, scaleX, scaleY float32) *Display {
 // calls it from a place that holds no App (a window's draw callback), the same
 // way InvokeTask and GlobalClipboard work: a backend installs its own with
 // SetBestDisplayForRect at startup. The default reports scale 1.0, matching
-// unison's X11 path, where the window realizes a scale of 1.0 and ScaleFonts(1)
+// The reference toolkit's X11 path, where the window realizes a scale of 1.0 and ScaleFonts(1)
 // bumps the theme's base font to cap-8.
 var BestDisplayForRect = func(r graphics.Rect) *Display {
 	return &Display{ScaleX: 1, ScaleY: 1}

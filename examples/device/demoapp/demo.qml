@@ -316,7 +316,7 @@ Window {
               Layout.fillWidth: true
               Layout.fillHeight: true
               model: ["Src Root", "  research deepseek harness", "  Android widgets adaptation",
-                      "  flipmode.dev", "flipmode.com", "  MeUiMobile Build", "  DSH hub",
+                      "  meui.dev", "  github.com/sixnineone/meui", "  MeUiMobile Build", "  DSH hub",
                       "TradeUI", "  Analyze meui-mobile UI", "meui", "proxyone.com"]
             }
           }

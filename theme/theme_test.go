@@ -7,7 +7,7 @@ import "testing"
 // assigned it (a chart package re-deriving its palette, for example)
 // replaced the window layer's repaint callback, so theme switches
 // stopped repainting the UI. Registration must be additive and every
-// listener must fire. Parity with flipmode.com/meui/theme.
+// listener must fire. Parity with the reference theme package.
 func TestOnThemeChangedMultipleListeners(t *testing.T) {
 	// Isolate from other tests / package init registrations.
 	themeChangedMu.Lock()

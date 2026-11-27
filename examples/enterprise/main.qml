@@ -802,7 +802,7 @@ Window {
 
                   Label { text: "MeUi UI Toolkit"; color: "secondary" }
                   Label { text: "Version 0.8.0" }
-                  Label { text: "A flexible UI library using unison" }
+                  Label { text: "A flexible UI library for Go" }
                   Rectangle { color: "border"; Layout.fillWidth: true; height: 1 }
                   Label { text: "Built with Go and GLFW" }
                 }

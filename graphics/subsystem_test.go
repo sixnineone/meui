@@ -98,7 +98,7 @@ func TestColorDecodeInvalid(t *testing.T) {
 }
 
 func TestFontFaceMatching(t *testing.T) {
-	// Embedded Roboto resolves (production parity: unison embeds Roboto).
+	// Embedded Roboto resolves (production parity: the reference toolkit embeds Roboto).
 	roboto := MatchFontFace("Roboto", weight.Light, spacing.Standard, slant.Upright)
 	if roboto == nil {
 		t.Fatal("MatchFontFace(Roboto) returned nil")
@@ -108,7 +108,7 @@ func TestFontFaceMatching(t *testing.T) {
 		t.Fatal("Roboto.Font(14) returned nil")
 	}
 	// Non-embedded families return nil, exactly like production's
-	// unison/skia path on systems without the family installed.
+	// Skia path on systems without the family installed.
 	if inter := MatchFontFace("Inter", weight.Light, spacing.Standard, slant.Upright); inter != nil {
 		t.Error("MatchFontFace(Inter) should return nil (not embedded)")
 	}

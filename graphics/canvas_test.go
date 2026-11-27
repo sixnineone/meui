@@ -79,7 +79,7 @@ func TestColorConstructorsMatchBackend(t *testing.T) {
 	if uint32(RGBA(1, 2, 3, 255)) != uint32(mobilegles.RGBA(1, 2, 3, 255)) {
 		t.Fatal("RGBA broken")
 	}
-	// ARGB matches the unison signature: float alpha, int channels.
+	// ARGB matches the reference signature: float alpha, int channels.
 	if uint32(ARGB(1.0, 1, 2, 3)) != uint32(mobilegles.RGBA(1, 2, 3, 255)) {
 		t.Fatal("ARGB broken (should equal RGBA(r,g,b,a))")
 	}

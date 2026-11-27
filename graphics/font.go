@@ -21,7 +21,7 @@ import (
 // backend (a *mobilegles.Font) that is used for actual drawing.
 type FontImpl struct {
 	family  string
-	size    float32 // requested size in cap-height logical px (unison semantics)
+	size    float32 // requested size in cap-height logical px (reference semantics)
 	weight  weight.Enum
 	spacing spacing.Enum
 	slant   slant.Enum
@@ -35,10 +35,10 @@ type FontImpl struct {
 	syntheticItalic bool
 }
 
-// fontFitCache caches em fitting per face/size (unison fontSizeCache parity).
+// fontFitCache caches em fitting per face/size (reference font-cache parity).
 var fontFitCache sync.Map
 
-// emPx returns the rasterization em size for this font: the unison
+// emPx returns the rasterization em size for this font: the reference
 // FontFace.Font fitting loop, where the requested size is the CAP HEIGHT
 // in logical pixels. Unison iterates the underlying size until the font's
 // cap height matches the request; we solve the same loop against the
@@ -91,7 +91,7 @@ func (f *FontImpl) descentPx() float32 {
 }
 
 // Font is an alias for *FontImpl. It is shaped as a pointer so a zero
-// value of Font is a nil pointer (matching unison's Font interface
+// value of Font is a nil pointer (matching the reference Font interface
 // zero-value semantics) and `Font: nil` works in struct literals.
 type Font = *FontImpl
 
@@ -110,7 +110,7 @@ func (f *FontImpl) Family() string {
 }
 
 // Font returns the underlying *truetype.Font. Matches the
-// unison.Font interface signature so meui code that does
+// reference Font interface signature so meui code that does
 // `meuishim.MonospacedFont.Font.Face()` works as if it were the
 // truetype face. nil if no truetype face is available.
 func (f *FontImpl) Font() *truetype.Font {
@@ -122,7 +122,7 @@ func (f *FontImpl) Font() *truetype.Font {
 
 // Face returns a FontFace descriptor for this font. Used to re-create
 // the font at a different size. Carries the resolved truetype face so
-// re-created fonts rasterize with the same family (unison parity —
+// re-created fonts rasterize with the same family (reference parity —
 // dropping it silently swapped the family for the system font).
 func (f *FontImpl) Face() *FontFace {
 	if f == nil {
@@ -275,7 +275,7 @@ func (f *FontImpl) Synthetic() (bold, italic bool) {
 
 // FontFace is our own FontFace type. It carries a descriptor; calling
 // Font(size) produces a Font at the given size. Family is exposed
-// via the Family() method, not a field, to match unison's FontFace
+// via the Family() method, not a field, to match the reference FontFace
 // API. face, when non-nil, is the concrete truetype font the family
 // resolved to (embedded Roboto faces); nil means "use the system font".
 type FontFace struct {
@@ -302,7 +302,7 @@ func (ff *FontFace) Font(size float32) Font {
 	}
 }
 
-// Family returns the family name. Method form (mirrors unison.FontFace.Family()).
+// Family returns the family name. Method form (mirrors the reference FontFace.Family()).
 func (ff *FontFace) Family() string {
 	if ff == nil {
 		return ""
@@ -311,7 +311,7 @@ func (ff *FontFace) Family() string {
 }
 
 // Style returns the (weight, spacing, slant) triple. Method form
-// (mirrors unison.FontFace.Style()).
+// (mirrors the reference FontFace.Style()).
 func (ff *FontFace) Style() (weight.Enum, spacing.Enum, slant.Enum) {
 	if ff == nil {
 		return 0, 0, 0
@@ -468,7 +468,7 @@ func lookupRegisteredFamily(family string, w weight.Enum, sl slant.Enum) *truety
 }
 
 // MatchFontFace resolves a family/style to a concrete font face.
-// Unison parity: only the embedded Roboto family resolves (unison
+// Reference parity: only the embedded Roboto family resolves (the reference
 // embeds Roboto and, unlike skia's font manager here, we do not fall
 // back to arbitrary system fonts); unknown families return nil so
 // callers fall back exactly like production.
@@ -556,7 +556,7 @@ var preferredSystemFamilies = []string{
 }
 
 // ensureSystemTTF lazily loads the first available system font so meui
-// apps get text without explicit font setup (parity with unison, which
+// apps get text without explicit font setup (parity with the reference toolkit, which
 // resolves system fonts internally).
 func ensureSystemTTF() {
 	systemFontOnce.Do(func() {

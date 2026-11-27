@@ -1,6 +1,6 @@
 // renderparity renders a QML file through the meuishim/mobilegles stack
 // and captures the framebuffer to PNG for visual comparison against the
-// unison/Skia reference renders (see RENDER_PARITY_PLAN.md).
+// Skia reference renders (see RENDER_PARITY_PLAN.md).
 //
 // Usage:
 //

@@ -8,7 +8,7 @@ import (
 )
 
 // keyNames maps spec key names to Keycodes. Values are the mobilegles
-// Keycode constants (USB HID subset; arrows use the unison-compat
+// Keycode constants (USB HID subset; arrows use the reference-compatible
 // values 200/203/205/208).
 var keyNames = map[string]mobilegles.Keycode{
 	"enter":     mobilegles.KeyEnter,

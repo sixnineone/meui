@@ -8,7 +8,7 @@ import (
 
 // ColorDecode parses CSS-style color strings: hex (#RGB, #RRGGBB),
 // rgb(r,g,b), rgba(r,g,b,a), or named colors. This is a partial
-// implementation of unison's ColorDecode.
+// implementation of the reference ColorDecode.
 func ColorDecode(s string) (Color, error) {
 	s = strings.TrimSpace(s)
 	if len(s) == 0 {

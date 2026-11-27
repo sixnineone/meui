@@ -2539,7 +2539,7 @@ func parseColor(s string) graphics.Color {
 			return v
 		}
 	}
-	// Use unison's ColorDecode which supports hex, rgb(), rgba(), hsl(), and named colors
+	// Use the reference ColorDecode, which supports hex, rgb(), rgba(), hsl() and named colors
 	if c, err := graphics.ColorDecode(s); err == nil {
 		return c
 	}

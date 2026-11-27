@@ -371,7 +371,7 @@ func (w *BaseWidget) MarkForRedraw() {
 }
 
 // Redraw forces an immediate redraw of this widget and all ancestors.
-// This is called by the unison loop when NeedsRedraw() returns true.
+// This is called by the frame loop when NeedsRedraw() returns true.
 func (w *BaseWidget) Redraw() {
 	w.needsRedraw = false
 	// Propagate redraw up to parent

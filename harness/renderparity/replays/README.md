@@ -32,5 +32,5 @@ Then assert the captured frame (out/<corpus>.png):
 | md_task       | audit7   | click "another unchecked" task checkbox | glyph flips ☐→☑ (source rewritten to [x], reparsed)  |
 | md_link       | audit7   | click autolink in paragraph | click consumed (OpenURL), no selection started      |
 
-Buttons normalize at the shim boundary: SDL Left=1 → unison Left=0, so
+Buttons normalize at the shim boundary: SDL Left=1 → toolkit Left=0, so
 replay files use button 0 for left-click.

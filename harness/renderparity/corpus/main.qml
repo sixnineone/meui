@@ -793,7 +793,7 @@ Window {
 
                     Label { text: "MeUi UI Toolkit"; color: "#AAAAAA" }
                     Label { text: "Version 0.8.0" }
-                    Label { text: "A flexible UI library using unison" }
+                    Label { text: "A flexible UI library for Go" }
                     Rectangle { color: "#3C3C3C"; Layout.fillWidth: true; height: 1 }
                     Label { text: "Built with Go and GLFW" }
                   }
@@ -1493,7 +1493,7 @@ Window {
                   Layout.fillHeight: true
                   showLineNumbers: true
                   fontSize: 50
-                  filePath: "/media/siya/TradeData/Data/env/dev/golang/src/flipmode.com/meui/examples/demo/main.go"
+                  filePath: "examples/enterprise/main.go"
                 }
               }
               Tab {
@@ -1504,7 +1504,7 @@ Window {
                   Layout.fillHeight: true
                   showLineNumbers: true
                   fontSize: 20
-                  filePath: "/media/siya/TradeData/Data/env/dev/golang/src/flipmode.com/meui/examples/demo/test_codeeditor.qml"
+                  filePath: "examples/enterprise/main.qml"
                 }
               }
               Tab {
@@ -1515,7 +1515,7 @@ Window {
                   Layout.fillHeight: true
                   showLineNumbers: true
                   fontSize: 20
-                  filePath: "/media/siya/TradeData/Data/env/dev/golang/src/flipmode.com/meui/widget.go"
+                  filePath: "widgets/codeeditor.go"
                 }
               }
               Tab {
@@ -1524,7 +1524,7 @@ Window {
                 MarkdownView {
                   Layout.fillWidth: true
                   Layout.fillHeight: true
-                  filePath: "/media/siya/TradeData/Data/env/dev/golang/src/flipmode.com/meui/docs/HITTEST.md"
+                  filePath: "README.md"
                 }
               }
             }

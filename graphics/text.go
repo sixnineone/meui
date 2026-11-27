@@ -13,7 +13,7 @@ type Ink interface {
 	Paint(canvas *Canvas, rect Rect, style int32) *Paint
 }
 
-// Text is a stub matching the unison.Text API surface used by meui.
+// Text is a stub matching the reference Text API surface used by meui.
 // A faithful implementation needs shaping, layout, and per-glyph
 // metrics that mobilegles does not expose. Until then, Text.Draw
 // forwards to Canvas.DrawText with the decoration's font.

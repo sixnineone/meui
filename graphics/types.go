@@ -55,7 +55,7 @@ func RGBA(r, g, b, a uint8) Color {
 	return Color((uint32(a) << 24) | (uint32(r) << 16) | (uint32(g) << 8) | uint32(b))
 }
 
-// ARGB matches the unison signature: alpha as a 0.0–1.0 float and
+// ARGB matches the reference signature: alpha as a 0.0–1.0 float and
 // red/green/blue as 0–255 ints. mobilegles has only uint8 RGBA, so
 // scale alpha to 0–255 and clamp.
 func ARGB(alpha float32, red, green, blue int) Color {

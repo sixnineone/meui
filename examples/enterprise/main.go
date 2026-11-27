@@ -414,7 +414,7 @@ func main() {
 		model.MainMenu.SetMenuItemAction("Help", "About", func() {
 			widgets.ShowMessageBox(win,
 				"About MeUi",
-				"MeUi UI Toolkit\n"+AppVersion+"\n\nA flexible UI library using unison\nBuilt with Go and GLFW",
+				"MeUI — declare the surface in QML, decide in Go.\n"+AppVersion+"\n\nBuilt with Go, SDL3, OpenGL and purego",
 				[]string{"OK"}, nil)
 		})
 	}

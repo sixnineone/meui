@@ -1,4 +1,4 @@
-// Package pathop mirrors pryone.com/extern/unison/enums/pathop.
+// Package pathop mirrors the reference toolkit's path-op enum.
 // mobilegles has no path-operation enum; values are local int constants.
 // Only the values meui actually uses (Intersect) are defined.
 package pathop

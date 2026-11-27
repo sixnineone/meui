@@ -1039,7 +1039,7 @@ func (w *Window) Dispose() {
 	// Dispose children
 	w.ClearChildren()
 
-	// Release unison resources
+	// Release the platform resources
 
 	w.panelToExpose = nil
 
@@ -1645,7 +1645,7 @@ func (w *Window) Paint(canvas *graphics.Canvas, rect graphics.Rect) {
 	if w.NeedsLayout() || w.childrenNeedLayout() {
 		w.ValidateLayout()
 	}
-	// Update window frame to match the rect from unison (without triggering redraw)
+	// Update window frame to match the rect from the platform layer (without triggering redraw)
 	w.x = rect.X
 	w.y = rect.Y
 	w.width = rect.Width
@@ -2011,7 +2011,7 @@ func (w *Window) DismissContextMenu(id string) {
 //
 // The platform layer (SDL on desktop, EGL/NativeActivity on Android later)
 // delivers every input event through this single dispatch point. It routes
-// to the same handle* machinery the unison-style panel callbacks use, so
+// to the same handle* machinery the reference-style panel callbacks use, so
 // widget behavior is identical whether events arrive live or replayed.
 
 // CursorAt implements meuishim.CursorSource — the hover cursor for the
