@@ -3,7 +3,7 @@
 Window {
   id: root
   width: 900
-  height: 920
+  height: 1064
   color: "#F7F5F0"
 
   Rectangle {
@@ -25,9 +25,9 @@ Window {
     Text {
       x: 32
       y: 74
-      width: 700
+      width: 830
       height: 20
-      text: "Ten examples: web pages, enterprise consoles, a phone demo and the imported QML kitchen sink. Each opens in its own process."
+      text: "Twelve examples: web pages, two Go builders, enterprise consoles, a phone demo and the imported QML kitchen sink. Each opens in its own process."
       font.pixelSize: 10
       font.weight: 400
       color: "#6B7280"
@@ -64,14 +64,14 @@ Window {
       x: 32
       y: 118
       width: 836
-      height: 730
+      height: 874
       color: "#00000000"
     }
 
     Text {
       id: status
       x: 32
-      y: 868
+      y: 1012
       width: 760
       height: 20
       text: ""

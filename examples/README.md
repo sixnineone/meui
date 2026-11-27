@@ -1,11 +1,11 @@
 # MEUI examples
 
-Ten applications built with **MeUI** — the widget toolkit in this repository — plus the
-parity scene its renderer is checked against.
+Thirteen applications built with **MeUI** — the widget toolkit in this repository — plus
+the launcher and the parity scene its renderer is checked against.
 
 They exist to show the toolkit as an application platform rather than a widget list:
-six web-looking pages, two enterprise desktop consoles, a phone-shaped device demo, and
-the imported QML kitchen sink. Between them: rectangles that round, lift and clip,
+six web-looking pages, two enterprise desktop consoles, a phone-shaped device demo, the
+imported QML kitchen sink, and two small pages built with the Go builders. Between them: rectangles that round, lift and clip,
 scrolling and sticky headers, lists of a thousand rows, forms that validate, frosted
 glass, a menubar, a tree, a `DataTable` driving an inspector, a navigation rail, a dark
 theme and an invite dialog.
@@ -36,6 +36,8 @@ CGO_ENABLED=0 go run ./examples/ops         # enterprise ops console (light desk
 CGO_ENABLED=0 go run ./examples/admin       # enterprise team admin (dark desktop theme)
 CGO_ENABLED=0 go run ./examples/device      # phone-shaped device demo
 CGO_ENABLED=0 go run ./examples/enterprise  # the imported QML kitchen sink
+CGO_ENABLED=0 go run ./examples/direct      # the same page built with widgets and setters
+CGO_ENABLED=0 go run ./examples/flow        # the same page declared as Go structs
 ```
 
 `examples/mobile` is a raw mobile demo (it drives the GL window directly) and expects a
@@ -59,6 +61,8 @@ CGO_ENABLED=0 go run ./examples/ops       -shot /tmp/ops.png
 CGO_ENABLED=0 go run ./examples/admin     -shot /tmp/admin.png
 CGO_ENABLED=0 go run ./examples/admin     -invite -shot /tmp/admin-invite.png
 CGO_ENABLED=0 go run ./examples/device    -page 0 -shot /tmp/device.png
+CGO_ENABLED=0 go run ./examples/direct    -shot /tmp/direct.png
+CGO_ENABLED=0 go run ./examples/flow      -shot /tmp/flow.png
 ```
 
 Two pages have state worth capturing:
@@ -95,6 +99,8 @@ MEUI_CAPTURE_SHOT=/tmp/enterprise.png MEUI_CAPTURE_SECS=4 go run .
 | `ops` | an operations console (desktop `meui-light`) | a `MenuBar`, a service **tree** filtering a typed `DataTable`, an inspector filled from the selected row, an activity strip, a `StatusBar`; “New run” queues a row and completes it on a timer |
 | `admin` | a team admin console (desktop `windows11-dark`) | a `NavigationRail`, live search + role filter composing into one filter, a member `DataTable`, a detail pane with a `Switch`, and an **invite dialog** overlay with validation and a duplicate check |
 | `device` | a phone-shaped demo | adaptive pages (widgets, device report, render, perf), bottom and action sheets, an adaptive dialog, a search view, swipe rows and pull-to-refresh — the demo used on real devices |
+| `direct` | a small page built imperatively | `meui.NewWindow`, `meui.NewPanel`, `layout.NewVStack` and widget setters — no QML, no flow |
+| `flow` | the same page declared in Go | the `flow` wrappers (`Window`, `VStack`, `Label`, `Button`) and `flow.Build`; no file to parse |
 | `enterprise` | the imported QML kitchen sink | the original demo application: tabs of controls, tables, editors, dialogs, its own brand theme |
 | `parity` | no window | the GL-vs-offscreen fixture: surfaces only (cards, gradient, translucency, clip, rounded image, z pair, frosted glass) |
 
@@ -135,5 +141,4 @@ With `make` installed, `make parity-web` runs those three steps. `cmd/tools/imgd
   on Android before it moved here).
 
 `../WEB.md` is the design record for the web support: the vocabulary, the measured
-references, the renderer notes, and what is deliberately not there. `../../AGENTS.md` and
-`../../MIGRATION.md` cover the toolkit's contracts and history.
+references, the renderer notes, and what is deliberately not there.

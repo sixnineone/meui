@@ -43,6 +43,8 @@ var examples = []example{
 	{"checkout", "Checkout", "Three steps, inline validation, a focus ring that shows the error", "forms, validation, state"},
 	{"ops", "Ops console", "A service tree, a runs table, a detail pane and an activity log", "menubar, DataTable, tree, selection"},
 	{"admin", "Team admin", "Dark console: nav rail, filters, member table and an invite dialog", "dark theme, filters, overlay, validation"},
+	{"direct", "Direct Go", "A page built with widgets and setters — no QML, no flow", "the imperative API"},
+	{"flow", "Declarative Go", "The same page declared as Go structs and built by flow", "the flow wrappers"},
 	{"device", "Device demo", "A phone-shaped demo: widget pages, a device report, render and perf", "adaptive layout, sheets, capabilities"},
 	{"enterprise", "Enterprise demo", "The imported QML kitchen sink: tabs, tables, editors, dialogs", "the original demo, every control"},
 }
@@ -51,7 +53,7 @@ func main() {
 	shot := flag.String("shot", "", "render one frame to this PNG and exit (headless)")
 	preset := flag.String("preset", "web-light", "theme preset")
 	width := flag.Int("w", 900, "window width")
-	height := flag.Int("h", 920, "window height")
+	height := flag.Int("h", 1064, "window height")
 	path := flag.String("qml", "examples/launcher/launcher.qml", "scene file")
 	flag.Parse()
 
