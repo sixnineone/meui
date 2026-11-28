@@ -46,6 +46,10 @@ device or a GL window; the device demo above is the one to run on a desktop.
 `CGO_ENABLED=0` is the desktop dev loop (purego, no cgo). With `make` installed,
 `make examples` runs the launcher and `make run` runs the enterprise demo.
 
+`examples/docs` also demonstrates bundled resources: its scene and cover image sit in
+`examples/docs/resources/`, are embedded with `//go:embed all:resources`, and the scene refers
+to the asset as `res://assets/cover.png`. `-qml path` still loads a scene from disk.
+
 ## Headless screenshots
 
 Every example takes `-shot PNG`, which renders one frame and exits — no display needed.
@@ -92,7 +96,7 @@ MEUI_CAPTURE_SHOT=/tmp/enterprise.png MEUI_CAPTURE_SECS=4 go run .
 |---|---|---|
 | `landing` | a marketing page for a fictional product | display type at 76px cap height, a card with a hard offset shadow, pill buttons, a painted play glyph, a clipped product shot |
 | `dashboard` | a weather dashboard over a sky gradient | full-bleed gradients, translucent cards over it, a bar chart made of boxes, a day strip where the chosen day is a **selected** box restyled from Go |
-| `docs` | a documentation site | fixed top bar and sidebar around a **scrolling article**, a **sticky** section header, a cover image with rounded corners, a **breakpoint** at 1000px that drops the sidebar |
+| `docs` | a documentation site | fixed top bar and sidebar around a **scrolling article**, a **sticky** section header, a cover image with rounded corners, a **breakpoint** at 1000px that drops the sidebar. The scene and cover live in `resources/` and are bundled (`res://`) |
 | `settings` | an account settings form | web-styled `TextField`, `ComboBox`, `Switch`, `CheckBox`, `RadioButton`, a primary `Button`, a save bar and a toast whose visibility Go flips |
 | `mail` | a three-column inbox | a **virtual list** (240 messages, ~12 widgets alive), selection and reveal, a **frosted** header the rows scroll under, an app-supplied serif in the reading pane |
 | `checkout` | a three-step checkout | **validation**: an invalid field blocks the step, shows an inline error, takes the keyboard and rings its focus in the error ink; a step indicator; a success state |

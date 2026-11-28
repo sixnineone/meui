@@ -308,6 +308,32 @@ func main() {
 
 `scene.Shot(720, 480, "hello.png")` renders the same tree without opening a window.
 
+## Bundled resources
+
+An application keeps its scenes and assets in `resources/` next to its main package and
+embeds them with one directive:
+
+```go
+//go:embed all:resources
+var appFS embed.FS
+
+bundle := resources.Default()
+bundle.Mount("res", appFS, "resources")
+scene, _ := web.LoadBundle(bundle, "res://docs.qml", "web-light", 1280, 900)
+```
+
+Everything under `resources/` is picked up on every build — adding an asset needs no code
+change. Scenes refer to files as `res://assets/cover.png`; the toolkit's own defaults live at
+`meui://` (the bundled themes ship in the binary). `resources.MountExternal("res", dir)` adds
+a directory at runtime: embedded-first by default, external-first after
+`SetOrder(..., ExternalFirst)`. External mounts go through `os.Root`, so a symlink cannot
+escape, and `-tags no_embed` builds without the toolkit defaults.
+
+[`examples/docs`](examples/docs) is the reference implementation — its scene and cover image
+live in `examples/docs/resources/`, and the example's `-qml` flag still loads a disk file for
+design iteration. Fonts are the next piece: the default face is still resolved from disk or
+the system until the renderer exposes a bytes loader.
+
 ## Features
 
 **Layout and surfaces**
@@ -461,10 +487,11 @@ CI runs `go build`, `go vet`, `gofmt`, the cgo guard and the headless suites on 
 - [`WEB.md`](WEB.md) — the design record: vocabulary, measured references, renderer notes
 - [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) — bundled fonts, themes and dependency licences
 - [`SECURITY.md`](SECURITY.md) — the scene trust model and private vulnerability reporting
+- [`resources/`](resources) — the bundle and namespace implementation (`res://`, `meui://`)
 
 ## Status
 
-**v0.1.2** — pre-1.0, so the API can still move. Linux desktop is the development target;
+**v0.1.3** — pre-1.0, so the API can still move. Linux desktop is the development target;
 the SDL3 adapter and the GL renderer are portable, and the adapter carries the Android JNI
 surface. Issues and examples of what you are building are welcome.
 

@@ -3,6 +3,18 @@
 All notable changes to MeUI are recorded here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions are pre-1.0.
 
+## [0.1.3] — 2026-11-28
+
+### Added
+- `resources` package: a bundle of `res://` (application) and `meui://` (toolkit) namespaces,
+  with embedded and external layers, an explicit precedence order, merged directory
+  listings, and `os.Root` confinement for external mounts. Paths cannot escape a bundle.
+- `qml.LoadBundle`, `qml.LoadFS` and `web.LoadBundle`, plus `res://` / `meui://` support in
+  `Image`, `CodeEditor`, `MarkdownView` and markdown images.
+- The toolkit's themes are embedded (`-tags no_embed` removes them).
+- `examples/docs` is the reference bundle: scene and cover image under `resources/`,
+  embedded, and no longer dependent on the working directory.
+
 ## [0.1.2] — 2026-11-28
 
 ### Security

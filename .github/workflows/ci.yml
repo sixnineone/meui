@@ -47,5 +47,8 @@ jobs:
             CGO_ENABLED=0 go test ./...
           fi
 
+      - name: build without embedded defaults
+        run: CGO_ENABLED=0 go build -tags no_embed ./...
+
       - name: cgo guard
         run: sh scripts/check-nocgo.sh
