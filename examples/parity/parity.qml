@@ -100,7 +100,7 @@ Window {
       width: 240
       height: 140
       radius: 16
-      source: "examples/docs/assets/cover.png"
+      source: "examples/docs/resources/assets/cover.png"
       fillMode: "cover"
     }
 

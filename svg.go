@@ -11,6 +11,7 @@ import (
 
 	"github.com/sixnineone/meui/graphics"
 	"github.com/sixnineone/meui/graphics/enums/paintstyle"
+	"github.com/sixnineone/meui/resources"
 )
 
 //go:embed assets/icons/*.svg
@@ -72,6 +73,23 @@ func LoadSVG(path string) (*SVGDocument, error) {
 
 // LoadSVGByName loads an SVG from the embedded assets/icons directory
 func LoadSVGByName(name string) (*SVGDocument, error) {
+	// A resource URI is an explicit address in a bundle, not a filesystem path.
+	if resources.IsURI(name) {
+		if doc, ok := svgCache[name]; ok {
+			return doc, nil
+		}
+		data, err := resources.ReadFileLimit(name, 8<<20)
+		if err != nil {
+			return nil, err
+		}
+		doc, err := parseSVG(string(data))
+		if err != nil {
+			return nil, err
+		}
+		svgCache[name] = doc
+		return doc, nil
+	}
+
 	// Icon names come from scenes (`icon: "document"`), so they must not be
 	// paths: a name with a separator or a parent reference would make the
 	// icon lookup read an arbitrary file.

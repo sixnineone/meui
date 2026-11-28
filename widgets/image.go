@@ -204,7 +204,7 @@ func clamp01(v float32) float32 {
 // formats graphics already decodes; a load failure leaves the viewer empty and is
 // returned so a scene can report it rather than show a blank card.
 func (w *Image) SetSource(path string) error {
-	img, err := graphics.NewImageFromFilePathOrURL(path, 1)
+	img, err := loadImage(path)
 	if err != nil {
 		return err
 	}

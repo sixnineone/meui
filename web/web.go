@@ -24,6 +24,7 @@ import (
 	"github.com/sixnineone/meui"
 	"github.com/sixnineone/meui/graphics"
 	"github.com/sixnineone/meui/qml"
+	"github.com/sixnineone/meui/resources"
 	"github.com/sixnineone/meui/theme"
 	"github.com/sixnineone/meui/widgets"
 )
@@ -55,6 +56,30 @@ func Load(path, preset string, w, h int) (*Scene, error) {
 		win.SetFrameRect(graphics.NewRect(0, 0, float32(w), float32(h)))
 	}
 	s := &Scene{Root: res.Widget, Reg: res.Widgets, Ctx: res.Context, Path: path}
+	s.Root.SetFrameRect(graphics.NewRect(0, 0, float32(w), float32(h)))
+	return s, nil
+}
+
+// LoadBundle is Load with the scene and its assets coming from a resources
+// bundle. The URI uses a scheme mounted on the bundle, e.g.
+// res://scenes/main.qml.
+func LoadBundle(bundle *resources.Bundle, uri, preset string, w, h int) (*Scene, error) {
+	if preset != "" {
+		if err := theme.LoadPreset(preset); err != nil {
+			return nil, fmt.Errorf("web: preset %q: %w", preset, err)
+		}
+	}
+	res, err := qml.LoadBundle(bundle, uri)
+	if err != nil {
+		return nil, err
+	}
+	if res.Widget == nil {
+		return nil, fmt.Errorf("web: %s parsed to no root widget", uri)
+	}
+	if win, ok := res.Widget.(*meui.Window); ok {
+		win.SetFrameRect(graphics.NewRect(0, 0, float32(w), float32(h)))
+	}
+	s := &Scene{Root: res.Widget, Reg: res.Widgets, Ctx: res.Context, Path: uri}
 	s.Root.SetFrameRect(graphics.NewRect(0, 0, float32(w), float32(h)))
 	return s, nil
 }

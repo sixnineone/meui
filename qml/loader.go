@@ -3,6 +3,7 @@ package qml
 import (
 	"fmt"
 	"io"
+	"io/fs"
 	"log"
 	"math"
 	"os"
@@ -17,6 +18,7 @@ import (
 	"github.com/sixnineone/meui/graphics/enums/weight"
 	"github.com/sixnineone/meui/layout"
 	"github.com/sixnineone/meui/platform"
+	"github.com/sixnineone/meui/resources"
 	"github.com/sixnineone/meui/theme"
 	"github.com/sixnineone/meui/widgets"
 )
@@ -277,6 +279,32 @@ func ParseWithBindingsFile(path string) (*QMLResult, error) {
 	data, err := readQMLFile(path)
 	if err != nil {
 		return nil, err
+	}
+	return ParseWithBindings(string(data))
+}
+
+// LoadBundle reads a scene from a resources bundle, e.g. res://scenes/main.qml.
+// Asset and file references inside the scene stay resource URIs (res://,
+// meui://) and are resolved by the widgets when they load them.
+func LoadBundle(bundle *resources.Bundle, uri string) (*QMLResult, error) {
+	meui.InitDebug()
+	data, err := bundle.ReadFileLimit(uri, maxQMLBytes)
+	if err != nil {
+		return nil, err
+	}
+	return ParseWithBindings(string(data))
+}
+
+// LoadFS reads a scene from any fs.FS. It does not rewrite references, so a
+// caller that also wants resource-scheme assets should use LoadBundle.
+func LoadFS(fsys fs.FS, path string) (*QMLResult, error) {
+	meui.InitDebug()
+	data, err := fs.ReadFile(fsys, path)
+	if err != nil {
+		return nil, err
+	}
+	if len(data) > maxQMLBytes {
+		return nil, fmt.Errorf("qml: %s exceeds %d bytes", path, maxQMLBytes)
 	}
 	return ParseWithBindings(string(data))
 }

@@ -164,7 +164,7 @@ Window {
           width: 44
           height: 44
           radius: 22
-          source: "examples/docs/assets/cover.png"
+          source: "examples/docs/resources/assets/cover.png"
           fillMode: "cover"
         }
 
@@ -236,7 +236,7 @@ Window {
         width: 72
         height: 72
         radius: 36
-        source: "examples/docs/assets/cover.png"
+        source: "examples/docs/resources/assets/cover.png"
         fillMode: "cover"
       }
 

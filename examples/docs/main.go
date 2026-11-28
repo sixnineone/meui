@@ -10,6 +10,7 @@
 package main
 
 import (
+	"embed"
 	"flag"
 	"fmt"
 	"os"
@@ -17,9 +18,16 @@ import (
 	"github.com/sixnineone/meui"
 	"github.com/sixnineone/meui-gl/sdl3"
 	"github.com/sixnineone/meui/graphics"
+	"github.com/sixnineone/meui/resources"
 	"github.com/sixnineone/meui/web"
 	"github.com/sixnineone/meui/widgets"
 )
+
+// The scene and its assets are bundled. Everything under resources/ is picked
+// up by the build; the scene refers to them as res://.
+//
+//go:embed all:resources
+var docsFS embed.FS
 
 var (
 	inkActiveInk = graphics.Color(0xFF4F46E5)
@@ -31,11 +39,24 @@ func main() {
 	preset := flag.String("preset", "web-light", "theme preset")
 	width := flag.Int("w", 1280, "window width")
 	height := flag.Int("h", 900, "window height")
-	path := flag.String("qml", "examples/docs/docs.qml", "scene file")
+	path := flag.String("qml", "", "scene file override (disk path)")
 	scroll := flag.Float64("scroll", 0, "scroll the article to this offset before shooting")
 	flag.Parse()
 
-	scene, err := web.Load(*path, *preset, *width, *height)
+	var (
+		scene *web.Scene
+		err   error
+	)
+	if *path != "" {
+		scene, err = web.Load(*path, *preset, *width, *height)
+	} else {
+		bundle := resources.Default()
+		if err := bundle.Mount("res", docsFS, "resources"); err != nil {
+			fmt.Fprintf(os.Stderr, "docs: mount resources: %v\n", err)
+			os.Exit(1)
+		}
+		scene, err = web.LoadBundle(bundle, "res://docs.qml", *preset, *width, *height)
+	}
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "docs: %v\n", err)
 		os.Exit(1)

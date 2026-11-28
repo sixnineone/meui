@@ -654,7 +654,7 @@ func (mv *MarkdownView) SetText(text string) {
 func (mv *MarkdownView) Text() string { return mv.text }
 
 func (mv *MarkdownView) SetFilePath(path string) {
-	data, err := readTextFile(path)
+	data, err := readTextResource(path)
 	if err != nil {
 		mv.SetText("Error: " + err.Error())
 		return
@@ -1800,7 +1800,7 @@ func (mv *MarkdownView) loadImage(path string) *graphics.Image {
 	if img, ok := mv.imgCache[path]; ok {
 		return img
 	}
-	img, err := graphics.NewImageFromFilePathOrURL(path, 1)
+	img, err := loadImage(path)
 	if err != nil {
 		return nil
 	}

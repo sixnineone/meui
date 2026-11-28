@@ -2,10 +2,12 @@ package meui
 
 import (
 	"embed"
+	"github.com/sixnineone/meui/resources"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+	"testing/fstest"
 
 	"github.com/sixnineone/meui/graphics"
 )
@@ -203,5 +205,18 @@ func TestLoadSVGByNameRefusesPaths(t *testing.T) {
 		if _, err := LoadSVGByName(name); err == nil {
 			t.Errorf("LoadSVGByName(%q) accepted a path-like icon name", name)
 		}
+	}
+}
+
+func TestLoadSVGByNameReadsResourceURIs(t *testing.T) {
+	b := resources.Default()
+	if err := b.Mount("testsvg", fstest.MapFS{
+		"icons/star.svg": {Data: []byte(`<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8"><rect width="8" height="8"/></svg>`)},
+	}, ""); err != nil {
+		t.Fatal(err)
+	}
+	defer b.Unmount("testsvg")
+	if _, err := LoadSVGByName("testsvg://icons/star.svg"); err != nil {
+		t.Fatalf("resource icon: %v", err)
 	}
 }

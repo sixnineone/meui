@@ -533,7 +533,7 @@ Window {
           width: 820
           height: 220
           radius: 16
-          source: "examples/docs/assets/cover.png"
+          source: "res://assets/cover.png"
           fillMode: "cover"
         }
 
