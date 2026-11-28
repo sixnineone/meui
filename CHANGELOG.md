@@ -3,6 +3,14 @@
 All notable changes to MeUI are recorded here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions are pre-1.0.
 
+## [0.1.4] — 2026-11-28
+
+### Added
+- Window icons. Every window installs the embedded MeUI mark by default, so the taskbar no
+  longer shows the desktop's generic icon; `WindowOptions.Icon` overrides it and
+  `NoIcon` suppresses it. The adapter publishes `_NET_WM_ICON` on X11 and scales icons to
+  128 px, the largest size SDL's X11 backend publishes reliably.
+
 ## [0.1.3] — 2026-11-28
 
 ### Added

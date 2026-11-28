@@ -22,6 +22,13 @@ type WindowOptions struct {
 	// can be neither moved, maximized nor resized. Mobile hosts — where the OS
 	// owns the surface — and any app that draws its own chrome pass true.
 	NoChrome bool
+
+	// Icon is the window icon used by the window manager and the taskbar.
+	// Nil installs DefaultIcon(); set NoIcon to suppress the icon entirely.
+	// A backend that cannot set an icon ignores it.
+	Icon *graphics.Image
+	// NoIcon suppresses the default icon for this window.
+	NoIcon bool
 }
 
 // App is the toolkit-facing application facade: it opens windows, installs a
@@ -82,6 +89,7 @@ func (a *App) AddWindow(root *Window, opts WindowOptions) (platform.Window, erro
 	if err != nil {
 		return nil, err
 	}
+
 	// A backend may hand back a different size than was asked for: SDL on
 	// Android forces fullscreen, so the surface is the display's, not the
 	// requested 360x640. Lay the content out for the window that actually
@@ -120,6 +128,21 @@ func (a *App) AddWindow(root *Window, opts WindowOptions) (platform.Window, erro
 		wnd.ValidateLayout()
 	}
 	wnd.Show()
+
+	// Window icon, after the window is mapped: SDL's X11 backend publishes
+	// _NET_WM_ICON when it has a live window.
+	icon := opts.Icon
+	if icon == nil && !opts.NoIcon {
+		icon = DefaultIcon()
+	}
+	if icon != nil {
+		// Optional capability: a backend without an icon surface (the renderer's
+		// own window, a test stub) simply does not implement it.
+		if setter, ok := wnd.(interface{ SetIcon(*graphics.Image) bool }); ok {
+			setter.SetIcon(icon)
+		}
+	}
+
 	a.windows = append(a.windows, wnd)
 	return wnd, nil
 }

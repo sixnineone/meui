@@ -334,6 +334,22 @@ live in `examples/docs/resources/`, and the example's `-qml` flag still loads a 
 design iteration. Fonts are the next piece: the default face is still resolved from disk or
 the system until the renderer exposes a bytes loader.
 
+## Window icons
+
+Every MeUI window gets an icon, so no application falls back to the desktop's generic
+"X": the toolkit's mark is installed by default. Override it per window:
+
+```go
+icon, _ := graphics.NewImageFromFilePathOrURL("assets/app-icon.png", 1)
+app.AddWindow(root, meui.WindowOptions{Title: "MyApp", Icon: icon})
+```
+
+`NoIcon: true` suppresses it. The icon is set on the OS window (`_NET_WM_ICON` on X11) and
+scaled into 128 px, which is the largest size SDL's X11 backend publishes reliably. Under a
+Wayland compositor the taskbar or dock may still prefer the application's `.desktop` file:
+matching `StartupWMClass` (SDL derives `WM_CLASS` from the binary name) and `Icon=` there is
+the complementary step.
+
 ## Features
 
 **Layout and surfaces**
@@ -491,7 +507,7 @@ CI runs `go build`, `go vet`, `gofmt`, the cgo guard and the headless suites on 
 
 ## Status
 
-**v0.1.3** — pre-1.0, so the API can still move. Linux desktop is the development target;
+**v0.1.4** — pre-1.0, so the API can still move. Linux desktop is the development target;
 the SDL3 adapter and the GL renderer are portable, and the adapter carries the Android JNI
 surface. Issues and examples of what you are building are welcome.
 

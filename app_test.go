@@ -21,6 +21,8 @@ type stubWindow struct {
 	laidOut         bool
 	raised          bool
 	titleBar        platform.TitleBar
+	icon            *graphics.Image
+	iconCalls       int
 }
 
 func (w *stubWindow) SetTitle(s string) { w.title = s }
@@ -54,6 +56,11 @@ func (w *stubWindow) SetOnResize(func(graphics.Size))              {}
 func (w *stubWindow) SetOnLifecycle(func(platform.LifecycleEvent)) {}
 func (w *stubWindow) SetOnInsets(func(platform.Insets))            {}
 func (w *stubWindow) SetTitleBar(tb platform.TitleBar)             { w.titleBar = tb }
+func (w *stubWindow) SetIcon(img *graphics.Image) bool {
+	w.icon = img
+	w.iconCalls++
+	return img != nil
+}
 
 // stubApp is a platform.App that hands out stubWindows.
 type stubApp struct {
@@ -234,5 +241,45 @@ func TestAddWindowInstallsChromeByDefault(t *testing.T) {
 	}
 	if got, want := sw2.rect.Height, float32(600); got != want {
 		t.Fatalf("NoChrome content height %v, want %v", got, want)
+	}
+}
+
+func TestAddWindowInstallsTheDefaultIcon(t *testing.T) {
+	backend := &stubApp{}
+	app := NewApp(backend, AppOptions{Size: graphics.NewSize(400, 300)})
+	win, err := app.AddWindow(nil, WindowOptions{Title: "icon"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	stub := win.(*stubWindow)
+	if stub.icon == nil {
+		t.Fatal("no icon was installed")
+	}
+	if stub.icon != DefaultIcon() {
+		t.Fatal("the default icon was not used")
+	}
+	if DefaultIcon() == nil || DefaultIcon().Width() != 128 {
+		t.Fatalf("DefaultIcon = %v", DefaultIcon())
+	}
+}
+
+func TestAddWindowIconOverrides(t *testing.T) {
+	backend := &stubApp{}
+	app := NewApp(backend, AppOptions{Size: graphics.NewSize(400, 300)})
+	custom := graphics.NewImage(make([]uint32, 4*4), 4, 4)
+	win, err := app.AddWindow(nil, WindowOptions{Title: "icon", Icon: custom})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := win.(*stubWindow).icon; got != custom {
+		t.Fatal("WindowOptions.Icon was not used")
+	}
+
+	win, err = app.AddWindow(nil, WindowOptions{Title: "noicon", NoIcon: true})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if win.(*stubWindow).iconCalls != 0 {
+		t.Fatal("NoIcon still installed an icon")
 	}
 }
