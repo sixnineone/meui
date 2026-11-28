@@ -3,6 +3,25 @@
 All notable changes to MeUI are recorded here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions are pre-1.0.
 
+## [0.1.2] — 2026-11-28
+
+### Security
+- `OpenURL` now validates before dispatch: no empty URLs, no control characters, and an
+  allow-list of `http`/`https`/`mailto`/`tel` (configurable with
+  `platform.SetOpenURLSchemes`). Links from untrusted Markdown or rich text can no longer
+  hand `file:` or other local handlers to the OS.
+- QML source is capped at 8 MiB and 256 nesting levels; the parser and builder are
+  recursive, so a malicious scene could previously overflow the stack.
+- Image decoding, resampling, RGBA uploads and SVG rasterisation are capped at 64
+  megapixels (and 32,768 px per side), with overflow-safe buffer checks.
+- File reads reachable from a scene (`CodeEditor.filePath`, `MarkdownView.filePath`,
+  `Image` sources, SVG/icon paths) require a regular file and are size-capped, so
+  `/dev/zero` or a giant file can no longer stall or exhaust the process.
+- Theme imports are capped at 4 MiB; LSP message bodies at 32 MiB.
+
+### Changed
+- The README leads with the GPU/speed story and has a "Built for speed" section.
+
 ## [0.1.1] — 2026-11-27
 
 ### Added

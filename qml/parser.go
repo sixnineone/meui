@@ -5,10 +5,26 @@ import (
 	"strings"
 )
 
+const (
+	// maxQMLBytes bounds one scene file. Scenes are hand-written; 8 MiB is two
+	// orders of magnitude above a large page.
+	maxQMLBytes = 8 << 20
+	// maxQMLNesting bounds the object tree. Both the parser and the builder
+	// walk it recursively, so a deeply nested scene is a stack overflow rather
+	// than a layout.
+	maxQMLNesting = 256
+)
+
 func ParseQML(qml string) (*Object, error) {
 	qml = strings.TrimSpace(qml)
 	if qml == "" {
 		return nil, fmt.Errorf("empty QML")
+	}
+	if len(qml) > maxQMLBytes {
+		return nil, fmt.Errorf("QML is %d bytes; the limit is %d", len(qml), maxQMLBytes)
+	}
+	if err := checkQMLNesting(qml); err != nil {
+		return nil, err
 	}
 
 	if err := validateBraces(qml); err != nil {
@@ -21,6 +37,71 @@ func ParseQML(qml string) (*Object, error) {
 	}
 
 	return obj, nil
+}
+
+// checkQMLNesting rejects a scene whose object/array nesting would make the
+// recursive parser and builder overflow the stack. Strings and comments are
+// skipped so a brace in a label does not count.
+func checkQMLNesting(qml string) error {
+	depth := 0
+	inString, inLine, inBlock, escaped := false, false, false, false
+	for i := 0; i < len(qml); i++ {
+		c := qml[i]
+		if inLine {
+			if c == '\n' {
+				inLine = false
+			}
+			continue
+		}
+		if inBlock {
+			if c == '*' && i+1 < len(qml) && qml[i+1] == '/' {
+				inBlock = false
+				i++
+			}
+			continue
+		}
+		if inString {
+			if escaped {
+				escaped = false
+				continue
+			}
+			switch c {
+			case '\\':
+				escaped = true
+			case '"':
+				inString = false
+			}
+			continue
+		}
+		if c == '/' && i+1 < len(qml) {
+			if qml[i+1] == '/' {
+				inLine = true
+				i++
+				continue
+			}
+			if qml[i+1] == '*' {
+				inBlock = true
+				i++
+				continue
+			}
+		}
+		if c == '"' {
+			inString = true
+			continue
+		}
+		switch c {
+		case '{', '[':
+			depth++
+			if depth > maxQMLNesting {
+				return fmt.Errorf("QML nesting exceeds %d levels", maxQMLNesting)
+			}
+		case '}', ']':
+			if depth > 0 {
+				depth--
+			}
+		}
+	}
+	return nil
 }
 
 // validateBraces checks that all opening braces have matching closing braces.

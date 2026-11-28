@@ -1,6 +1,13 @@
 package platform
 
-import "time"
+import (
+	"errors"
+	"fmt"
+	"net/url"
+	"strings"
+	"sync"
+	"time"
+)
 
 // The capability seam: things an app asks the platform for that are not part of
 // every backend, expressed in neutral terms.
@@ -391,6 +398,64 @@ type Biometrics interface {
 
 // --- opening a URL --------------------------------------------------------
 
+// defaultOpenURLSchemes is the allow-list a scene cannot widen. Links in
+// untrusted Markdown or rich text reach OpenURL without the app seeing them, so
+// file:, javascript:, data: and custom handlers are refused by default.
+var defaultOpenURLSchemes = []string{"http", "https", "mailto", "tel"}
+
+var (
+	openURLMu      sync.RWMutex
+	openURLImpl    = openURLFallback
+	openURLSchemes = schemeSet(defaultOpenURLSchemes)
+)
+
+func schemeSet(schemes []string) map[string]bool {
+	m := make(map[string]bool, len(schemes))
+	for _, s := range schemes {
+		if s = strings.ToLower(strings.TrimSpace(s)); s != "" {
+			m[s] = true
+		}
+	}
+	return m
+}
+
+// SetOpenURLSchemes replaces the schemes OpenURL accepts. Called with no
+// arguments it restores the default http/https/mailto/tel list. An app that
+// needs a custom scheme should add only that scheme, not choose to trust
+// everything.
+func SetOpenURLSchemes(schemes ...string) {
+	openURLMu.Lock()
+	defer openURLMu.Unlock()
+	if len(schemes) == 0 {
+		openURLSchemes = schemeSet(defaultOpenURLSchemes)
+		return
+	}
+	openURLSchemes = schemeSet(schemes)
+}
+
+func allowedOpenURL(raw string) error {
+	if raw == "" {
+		return errors.New("empty url")
+	}
+	if strings.ContainsAny(raw, "\x00\r\n\t") {
+		return errors.New("url contains a control character")
+	}
+	u, err := url.Parse(raw)
+	if err != nil {
+		return err
+	}
+	if u.Scheme == "" {
+		return errors.New("url has no scheme")
+	}
+	openURLMu.RLock()
+	ok := openURLSchemes[strings.ToLower(u.Scheme)]
+	openURLMu.RUnlock()
+	if !ok {
+		return fmt.Errorf("scheme %q is not allowed", u.Scheme)
+	}
+	return nil
+}
+
 // OpenURL launches the platform handler for a URL (browser, mail client, …).
 //
 // It is a package-level function rather than an App method because the toolkit
@@ -398,13 +463,26 @@ type Biometrics interface {
 // the same way InvokeTask and GlobalClipboard work. A backend installs its own
 // with SetOpenURL at startup; the default shells out, which is the desktop
 // fallback.
-var OpenURL = openURLFallback
+//
+// The URL is validated before it reaches the backend: no empty URL, no control
+// characters, and only a scheme in the allow-list (see SetOpenURLSchemes).
+func OpenURL(raw string) error {
+	if err := allowedOpenURL(raw); err != nil {
+		return fmt.Errorf("platform.OpenURL: %w", err)
+	}
+	openURLMu.RLock()
+	impl := openURLImpl
+	openURLMu.RUnlock()
+	return impl(raw)
+}
 
 // SetOpenURL installs the backend's implementation. Nil restores the fallback.
 func SetOpenURL(fn func(string) error) {
+	openURLMu.Lock()
+	defer openURLMu.Unlock()
 	if fn == nil {
-		OpenURL = openURLFallback
+		openURLImpl = openURLFallback
 		return
 	}
-	OpenURL = fn
+	openURLImpl = fn
 }

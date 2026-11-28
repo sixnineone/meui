@@ -10,6 +10,11 @@ import (
 	"time"
 )
 
+// maxLSPMessage bounds one JSON-RPC message body from a language server. A
+// server that announces more than this is treated as broken rather than allowed
+// to allocate it.
+const maxLSPMessage = 32 << 20
+
 type LSPClient struct {
 	cmd             *exec.Cmd
 	stdin           io.WriteCloser
@@ -376,7 +381,15 @@ func (c *LSPClient) readLoop() {
 
 		var contentLength int
 		_, scanErr := fmt.Sscanf(line, "Content-Length: %d", &contentLength)
-		if scanErr == nil && contentLength > 0 {
+		// The server is a separate process: its framing is input, not a promise.
+		// A negative or enormous length would desync or exhaust the reader.
+		if scanErr == nil && contentLength < 0 {
+			c.connected = false
+			return
+		}
+		if scanErr == nil && contentLength > maxLSPMessage {
+			c.connected = false
+			return
 		}
 		if line == "\r\n" && contentLength > 0 {
 			body := make([]byte, contentLength)

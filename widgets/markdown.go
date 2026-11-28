@@ -654,7 +654,7 @@ func (mv *MarkdownView) SetText(text string) {
 func (mv *MarkdownView) Text() string { return mv.text }
 
 func (mv *MarkdownView) SetFilePath(path string) {
-	data, err := os.ReadFile(path)
+	data, err := readTextFile(path)
 	if err != nil {
 		mv.SetText("Error: " + err.Error())
 		return

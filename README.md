@@ -1,6 +1,7 @@
 # MeUI
 
-**QML declares the surface. Go decides what it does.**
+**QML declares the surface. Go decides what it does.**  
+**GPU-rendered, built for speed.**
 
 [![Go 1.25](https://img.shields.io/badge/Go-1.25-00ADD8?logo=go&logoColor=white)](https://go.dev)
 [![CI](https://github.com/sixnineone/meui/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/sixnineone/meui/actions/workflows/ci.yml)
@@ -17,12 +18,15 @@ a *builder*, not a language: no expressions, no bindings, no JavaScript. However
 is declared, every behaviour — a click, a selection, a scroll, a validation — is attached
 from Go, so the logic is typed, testable and debuggable.
 
-The same scene renders through a software device (headless, deterministic) or OpenGL
-(through [mobilegles](https://github.com/sixnineone/mobilegles)), which is what makes the
-screenshots and the pixel tests in this repository possible.
+Rendering is GPU-first: geometry is batched and submitted through OpenGL
+([mobilegles](https://github.com/sixnineone/mobilegles)), data views are virtualised, and a
+window with nothing to redraw is not redrawn. The software device exists for headless,
+deterministic screenshots and pixel tests — not as the production path.
 
 ## Why MeUI
 
+- **Fast by construction.** Batched OpenGL draws, dirty-driven repaints and virtualised
+  lists: the 240-message inbox keeps about a dozen widgets alive.
 - **QML that can't lie.** The QML is data, not code. Ids are resolved when the scene is
   built, so a typo is an error at startup, not a handler that silently never runs. There
   is no second place for state to hide: behaviour lives in Go, next to the rest of the app.
@@ -40,6 +44,20 @@ screenshots and the pixel tests in this repository possible.
   per-widget overrides.
 - **No cgo in the desktop build.** Control reaches SDL3 and OpenGL through purego, so the
   dev loop is plain `CGO_ENABLED=0 go run`.
+
+## Built for speed
+
+- **One batched GPU path.** Shapes, text and images are batched by primitive class in
+  [`mobilegles`](https://github.com/sixnineone/mobilegles); a frame is a handful of draw
+  calls, not one per widget.
+- **Virtualised data.** `VirtualList` instantiates only the rows on screen — the mail
+  example renders 240 messages with about twelve live widgets.
+- **Dirty-driven.** Widgets request layout and repaint when they change; an unchanged
+  window is not repainted on a timer.
+- **No cgo in the desktop hot path.** SDL3 and OpenGL are reached through purego, so there
+  is no cgo boundary to cross per call.
+- **The software device is the test path.** It renders the same scene headlessly and
+  deterministically for screenshots and pixel tests; apps ship the GPU path.
 
 ## Quick start
 
@@ -322,7 +340,7 @@ func main() {
 
 **Rendering and testing**
 - Software device for headless, deterministic rendering
-- OpenGL renderer (`mobilegles`) with the same primitive set
+- Batched OpenGL renderer (`mobilegles`) with the same primitive set
 - Headless behaviour suite, windowed visual suite, render-parity harness, `imgdiff`
 
 ## Gallery
@@ -442,10 +460,11 @@ CI runs `go build`, `go vet`, `gofmt`, the cgo guard and the headless suites on 
 - [`examples/README.md`](examples/README.md) — running, flags, what each example demonstrates
 - [`WEB.md`](WEB.md) — the design record: vocabulary, measured references, renderer notes
 - [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) — bundled fonts, themes and dependency licences
+- [`SECURITY.md`](SECURITY.md) — the scene trust model and private vulnerability reporting
 
 ## Status
 
-**v0.1.1** — pre-1.0, so the API can still move. Linux desktop is the development target;
+**v0.1.2** — pre-1.0, so the API can still move. Linux desktop is the development target;
 the SDL3 adapter and the GL renderer are portable, and the adapter carries the Android JNI
 surface. Issues and examples of what you are building are welcome.
 

@@ -4,12 +4,39 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
+	"io"
+	"os"
 	"sort"
 	"strings"
 
 	"github.com/sixnineone/meui/graphics"
 )
+
+// maxThemeFileBytes bounds a theme document read from disk. Real theme files
+// are tens of kilobytes; the cap exists so a bad path (or an enormous file in
+// a theme directory) cannot exhaust memory during import.
+const maxThemeFileBytes = 4 << 20
+
+func readThemeFile(path string) ([]byte, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	if st, err := f.Stat(); err != nil {
+		return nil, err
+	} else if !st.Mode().IsRegular() {
+		return nil, fmt.Errorf("theme: %q is not a regular file", path)
+	}
+	data, err := io.ReadAll(io.LimitReader(f, maxThemeFileBytes+1))
+	if err != nil {
+		return nil, err
+	}
+	if len(data) > maxThemeFileBytes {
+		return nil, fmt.Errorf("theme: %s exceeds %d bytes", path, maxThemeFileBytes)
+	}
+	return data, nil
+}
 
 // colorResolver resolves named colors to their hex values.
 type colorResolver map[string]string
@@ -60,7 +87,7 @@ func (cr colorResolver) resolveSubKeys(val interface{}) map[string]string {
 // ImportIntelliJThemeJSON loads an IntelliJ .theme.json file and returns a Theme.
 // The Theme.Name is set from the "name" field and widget defaults are also updated.
 func ImportIntelliJThemeJSON(path string) (*Theme, error) {
-	data, err := ioutil.ReadFile(path)
+	data, err := readThemeFile(path)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read .theme.json: %w", err)
 	}
@@ -986,7 +1013,7 @@ func darken(c graphics.Color, amt graphics.Color) graphics.Color {
 
 // ImportIntelliJTheme loads an IntelliJ IDEA .xml/.icls theme file and returns a Theme.
 func ImportIntelliJTheme(path string) (*Theme, error) {
-	data, err := ioutil.ReadFile(path)
+	data, err := readThemeFile(path)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read IntelliJ theme file: %w", err)
 	}
@@ -1030,7 +1057,7 @@ func mapIntelliJColor(t *Theme, name, value string) {
 
 // ImportFlatLafTheme loads a FlatLaf .properties or .json theme file and returns a Theme.
 func ImportFlatLafTheme(path string) (*Theme, error) {
-	data, err := ioutil.ReadFile(path)
+	data, err := readThemeFile(path)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read FlatLaf theme file: %w", err)
 	}
@@ -1077,7 +1104,7 @@ func mapFlatLafColor(t *Theme, key, value string) {
 
 // ImportVSCodeTheme loads a VS Code .json theme file and returns a Theme.
 func ImportVSCodeTheme(path string) (*Theme, error) {
-	data, err := ioutil.ReadFile(path)
+	data, err := readThemeFile(path)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read VS Code theme file: %w", err)
 	}
@@ -1120,7 +1147,7 @@ type EditorScheme struct {
 
 // ImportEditorScheme parses an IntelliJ .icls/.xml editor scheme file.
 func ImportEditorScheme(path string) (*EditorScheme, error) {
-	data, err := ioutil.ReadFile(path)
+	data, err := readThemeFile(path)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read editor scheme: %w", err)
 	}

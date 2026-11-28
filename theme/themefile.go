@@ -3,7 +3,6 @@ package theme
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"sync"
 
 	"github.com/sixnineone/meui/graphics"
@@ -130,7 +129,7 @@ type themeFile struct {
 // LoadThemeFile parses a native theme file, registers it under its ID,
 // and returns the ID (loadable via LoadPreset, usable in MEUI_THEME).
 func LoadThemeFile(path string) (string, error) {
-	data, err := os.ReadFile(path)
+	data, err := readThemeFile(path)
 	if err != nil {
 		return "", fmt.Errorf("theme file: %w", err)
 	}

@@ -197,3 +197,11 @@ func TestDrawSVGFallsBackWhenOffscreenRefused(t *testing.T) {
 		t.Fatal("fallback decision not cached: the offscreen attempt would retry every frame")
 	}
 }
+
+func TestLoadSVGByNameRefusesPaths(t *testing.T) {
+	for _, name := range []string{"../secret", "../../etc/passwd", "a/b", `a\\b`, "..", ".hidden"} {
+		if _, err := LoadSVGByName(name); err == nil {
+			t.Errorf("LoadSVGByName(%q) accepted a path-like icon name", name)
+		}
+	}
+}

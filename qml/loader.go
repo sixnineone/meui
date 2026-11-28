@@ -2,7 +2,7 @@ package qml
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"math"
 	"os"
@@ -228,9 +228,32 @@ func (ctx *BindingContext) ResolveProperty(obj *Object, propName string, value i
 
 func (r *BoundWidgetRegistry) ApplyBindings(ctx *BindingContext) {}
 
+// readQMLFile reads a scene with the parser's size limit applied before the
+// whole file can land in memory.
+func readQMLFile(path string) ([]byte, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	if st, err := f.Stat(); err != nil {
+		return nil, err
+	} else if !st.Mode().IsRegular() {
+		return nil, fmt.Errorf("qml: %q is not a regular file", path)
+	}
+	data, err := io.ReadAll(io.LimitReader(f, maxQMLBytes+1))
+	if err != nil {
+		return nil, err
+	}
+	if len(data) > maxQMLBytes {
+		return nil, fmt.Errorf("qml: %s exceeds %d bytes", path, maxQMLBytes)
+	}
+	return data, nil
+}
+
 func Load(path string) (*QMLResult, error) {
 	meui.InitDebug()
-	data, err := ioutil.ReadFile(path)
+	data, err := readQMLFile(path)
 	if err != nil {
 		return nil, err
 	}
@@ -238,7 +261,7 @@ func Load(path string) (*QMLResult, error) {
 }
 
 func LoadAndConvert(path string) (meui.Widget, error) {
-	data, err := ioutil.ReadFile(path)
+	data, err := readQMLFile(path)
 	if err != nil {
 		return nil, err
 	}
@@ -251,7 +274,7 @@ func ConvertFile(path string) (meui.Widget, error) {
 
 // ParseWithBindingsFile reads a QML file and returns the full result with registry.
 func ParseWithBindingsFile(path string) (*QMLResult, error) {
-	data, err := ioutil.ReadFile(path)
+	data, err := readQMLFile(path)
 	if err != nil {
 		return nil, err
 	}

@@ -17,12 +17,12 @@ import "fmt"
 // upside-down one, or red and blue swapped — which is exactly why this is one function rather than a
 // paragraph of instructions.
 func NewImageFromRGBA(rgba []byte, w, h int) (*Image, error) {
-	if w <= 0 || h <= 0 {
-		return nil, fmt.Errorf("graphics: %dx%d buffer", w, h)
+	if err := checkImageDimensions(w, h); err != nil {
+		return nil, err
 	}
-	if len(rgba) < w*h*4 {
+	if int64(len(rgba)) < int64(w)*int64(h)*4 {
 		return nil, fmt.Errorf("graphics: %d bytes is too few for %dx%d RGBA (want %d)",
-			len(rgba), w, h, w*h*4)
+			len(rgba), w, h, int64(w)*int64(h)*4)
 	}
 	pix := make([]uint32, w*h)
 	for y := 0; y < h; y++ {

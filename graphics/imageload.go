@@ -13,6 +13,32 @@ import (
 	"strings"
 )
 
+const (
+	// maxImagePixels bounds one decoded image. A 4K frame is 8.3 MP; 64 MP is
+	// generous for artwork while keeping the pixel buffer at 256 MiB.
+	maxImagePixels = 64 << 20
+	maxImageSide   = 32768
+	// maxImageFileBytes refuses pathological files before they are read into
+	// memory; the decoder itself is bounded by maxImagePixels.
+	maxImageFileBytes = 256 << 20
+)
+
+// checkImageDimensions rejects dimensions that would overflow the pixel buffer
+// or allocate an unreasonable one. It is the shared gate for decoded images,
+// resamples and RGBA uploads.
+func checkImageDimensions(w, h int) error {
+	if w <= 0 || h <= 0 {
+		return fmt.Errorf("graphics: image dimensions %dx%d", w, h)
+	}
+	if w > maxImageSide || h > maxImageSide {
+		return fmt.Errorf("graphics: image side %dx%d exceeds %d", w, h, maxImageSide)
+	}
+	if int64(w)*int64(h) > maxImagePixels {
+		return fmt.Errorf("graphics: image %dx%d exceeds %d pixels", w, h, maxImagePixels)
+	}
+	return nil
+}
+
 // NewImageFromFilePathOrURL loads an image from a filesystem path.
 //
 // Remote URLs are deliberately NOT fetched: the drawing seam performs no
@@ -23,6 +49,16 @@ import (
 func NewImageFromFilePathOrURL(filePathOrURL string, scale float32) (*Image, error) {
 	if strings.HasPrefix(filePathOrURL, "http://") || strings.HasPrefix(filePathOrURL, "https://") {
 		return nil, fmt.Errorf("graphics: %q is a remote URL; the drawing seam does not fetch over the network — fetch the bytes and use NewImageFromBytes", filePathOrURL)
+	}
+	st, err := os.Stat(filePathOrURL)
+	if err != nil {
+		return nil, err
+	}
+	if !st.Mode().IsRegular() {
+		return nil, fmt.Errorf("graphics: %q is not a regular file", filePathOrURL)
+	}
+	if st.Size() > maxImageFileBytes {
+		return nil, fmt.Errorf("graphics: %q is %d bytes; the limit is %d", filePathOrURL, st.Size(), maxImageFileBytes)
 	}
 	data, err := os.ReadFile(filePathOrURL)
 	if err != nil {
@@ -42,14 +78,21 @@ func NewImageFromFilePathOrURL(filePathOrURL string, scale float32) (*Image, err
 // are, and decoded straight-alpha data is premultiplied here so both kinds
 // composite identically).
 func NewImageFromBytes(data []byte) (*Image, error) {
+	cfg, _, err := image.DecodeConfig(bytes.NewReader(data))
+	if err != nil {
+		return nil, err
+	}
+	if err := checkImageDimensions(cfg.Width, cfg.Height); err != nil {
+		return nil, err
+	}
 	src, _, err := image.Decode(bytes.NewReader(data))
 	if err != nil {
 		return nil, err
 	}
 	b := src.Bounds()
 	w, h := b.Dx(), b.Dy()
-	if w <= 0 || h <= 0 {
-		return nil, fmt.Errorf("graphics: decoded image has empty bounds")
+	if err := checkImageDimensions(w, h); err != nil {
+		return nil, err
 	}
 	pix := make([]uint32, w*h)
 	for y := 0; y < h; y++ {
@@ -91,6 +134,11 @@ func (i *Image) Scaled(scale float32) *Image {
 	}
 	if nh < 1 {
 		nh = 1
+	}
+	if err := checkImageDimensions(nw, nh); err != nil {
+		// Refuse an absurd upscale rather than allocate for it; the receiver
+		// is still a valid image.
+		return i
 	}
 	out := make([]uint32, nw*nh)
 	for y := 0; y < nh; y++ {

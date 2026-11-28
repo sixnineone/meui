@@ -49,6 +49,13 @@ func LoadSVG(path string) (*SVGDocument, error) {
 		return doc, nil
 	}
 
+	st, err := os.Stat(path)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read SVG file: %w", err)
+	}
+	if !st.Mode().IsRegular() || st.Size() > 8<<20 {
+		return nil, fmt.Errorf("failed to read SVG file: %q is not a regular file under 8 MiB", path)
+	}
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read SVG file: %w", err)
@@ -65,6 +72,12 @@ func LoadSVG(path string) (*SVGDocument, error) {
 
 // LoadSVGByName loads an SVG from the embedded assets/icons directory
 func LoadSVGByName(name string) (*SVGDocument, error) {
+	// Icon names come from scenes (`icon: "document"`), so they must not be
+	// paths: a name with a separator or a parent reference would make the
+	// icon lookup read an arbitrary file.
+	if name == "" || strings.ContainsAny(name, `/\\`) || strings.Contains(name, "..") {
+		return nil, fmt.Errorf("SVG icon: invalid name %q", name)
+	}
 	if !strings.HasSuffix(name, ".svg") {
 		name += ".svg"
 	}
@@ -106,11 +119,14 @@ func LoadSVGByName(name string) (*SVGDocument, error) {
 // (a true 16-tap area average — see boxFilter4x) and drawn 1:1
 // pixel-aligned, matching Skia's analytic stroke coverage closely.
 func DrawSVG(canvas *graphics.Canvas, doc *SVGDocument, x, y, width, height float32) {
-	if doc == nil || width < 1 || height < 1 {
+	if doc == nil || !(width >= 1) || !(height >= 1) || width > 32768 || height > 32768 {
 		return
 	}
 
 	w, h := int(width+0.5), int(height+0.5)
+	if int64(w)*int64(h) > 64<<20 {
+		return
+	}
 	key := svgImgKey{doc: doc, w: w, h: h}
 
 	// Icons made purely of primitives (circle, rect, axis-aligned line,

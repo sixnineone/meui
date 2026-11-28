@@ -295,7 +295,7 @@ func (e *CodeEditor) SetFilePath(path string) {
 	e.FilePath = path
 	e.detectLanguage()
 	if path != "" {
-		if data, err := os.ReadFile(path); err == nil {
+		if data, err := readTextFile(path); err == nil {
 			e.SetText(string(data))
 		}
 	}
